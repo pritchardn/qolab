@@ -4,12 +4,7 @@
 
 #include "ub.h"
 
-/**
- * Generates initial state defining a quantum walk on our qubits. Assumes all qubits are fully connected, additional
- * walk masks can be applied (coming later). Builds matrix in coordinate format and then converts to CSC format
- * @param graph_size
- * @param ub
- */
+
 void generate_ub(int num_qubits, sparse_matrix_t *ub) {
     sparse_status_t status;
     MKL_INT nnz = 0;

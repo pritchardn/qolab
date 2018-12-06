@@ -49,3 +49,26 @@ void mkl_error_parse(int error_code, FILE *stream) {
             break;
     }
 }
+
+void mkl_sparse_print(sparse_matrix_t *matrix, FILE *stream){
+    sparse_status_t status;
+    sparse_index_base_t base;
+    MKL_INT rows, cols;
+    MKL_INT *rows_start, *rows_end, *col_indx;
+    MKL_Complex16 *values;
+    status = mkl_sparse_z_export_csc(*matrix, &base, &rows, &cols, &rows_start, &rows_end, &col_indx, &values);
+    mkl_error_parse(status, stream);
+
+    MKL_INT nnz = 0;
+    for(MKL_INT i = 0; i < rows; ++i){
+        nnz += rows_end[i] - rows_start[i];
+        fprintf(stream, "%lld %lld\n", rows_start[i], rows_end[i]);
+    }
+    for (int j = 0; j < nnz; ++j) {
+        fprintf(stream, "%f + %fi, ", values[j].real, values[j].imag);
+    }printf("\n");
+    for (int j = 0; j < nnz; ++j) {
+        fprintf(stream, "%lld ", col_indx[j]);
+    }printf("\n");
+    fprintf(stream, "nnz: %lld\n", nnz);
+}
