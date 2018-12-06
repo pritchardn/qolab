@@ -7,8 +7,8 @@ LINKERS =  -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_ilp64.a ${MKLRO
 # the build target executable:
 TARGET = ../bin/qaoa.exe
 LOC = ../src
-SRCS = $(LOC)/main.c $(LOC)/qaoa.c $(LOC)/ub.c $(LOC)/globals.c
-HEADERS = $(LOC)/main.h $(LOC)/qaoa.h $(LOC)/ub.h $(LOC)/globals.h
+SRCS = $(LOC)/main.c $(LOC)/qaoa.c $(LOC)/ub.c $(LOC)/globals.c $(LOC)/uc.c $(LOC)/problem_code.c
+HEADERS = $(LOC)/main.h $(LOC)/qaoa.h $(LOC)/ub.h $(LOC)/globals.h $(LOC)/uc.h $(LOC)/problem_code.h
 
 build: $(SRCS)
 	$(CC) $(CFLAGS) -o $(TARGET) $(SRCS) $(HEADERS) $(LINKERS)

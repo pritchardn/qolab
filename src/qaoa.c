@@ -10,13 +10,13 @@ void qaoa(machine_spec_t *mach_spec, optimisation_spec_t *opt_spec, run_spec_t *
 
     printf("%d\n", meta_spec.machine_spec->num_qubits);
 
+    //Initialise UC
+
+    //Initialise UB
     sparse_matrix_t ub;
     generate_ub(mach_spec->num_qubits, &ub);
     mkl_sparse_print(&ub, stdout);
     mkl_sparse_destroy(ub);
-
-    //Initialise UC
-    //Initialise UB
     //Trial feval
     //Teardown
 }
