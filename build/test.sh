@@ -1,5 +1,5 @@
 #!/bin/bash
 
-../bin/qaoa
+../bin/qaoa.exe
 
 exit 0
