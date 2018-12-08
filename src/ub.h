@@ -12,6 +12,6 @@
 #include <stdbool.h>
 #include "globals.h"
 
-void generate_ub(int num_qubits, sparse_matrix_t *ub);
+void generate_ub(qaoa_data_t *meta_data);
 
 #endif //GRAPHSIMILARITY_UB_H

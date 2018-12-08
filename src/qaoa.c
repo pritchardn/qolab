@@ -3,6 +3,10 @@
 #include <stdio.h>
 
 
+void qaoa_teardown(qaoa_data_t *meta_spec){
+    mkl_sparse_destroy(meta_spec->ub);
+}
+
 void qaoa(machine_spec_t *mach_spec, optimisation_spec_t *opt_spec, run_spec_t *run_spec){
     qaoa_data_t meta_spec;
     meta_spec.machine_spec = mach_spec;
@@ -13,10 +17,9 @@ void qaoa(machine_spec_t *mach_spec, optimisation_spec_t *opt_spec, run_spec_t *
     //Initialise UC
 
     //Initialise UB
-    sparse_matrix_t ub;
-    generate_ub(mach_spec->num_qubits, &ub);
-    mkl_sparse_print(&ub, stdout);
-    mkl_sparse_destroy(ub);
+    generate_ub(&meta_spec);
+    //mkl_sparse_print(&meta_spec.ub, stdout);
     //Trial feval
     //Teardown
+    qaoa_teardown(&meta_spec);
 }

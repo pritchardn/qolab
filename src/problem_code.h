@@ -8,5 +8,5 @@ typedef struct {
     int *graph;
     int x_range;
     int cx_range;
-} cost_data;
+} cost_data_t;
 #endif //QOLAB_PROBLEM_CODE_H

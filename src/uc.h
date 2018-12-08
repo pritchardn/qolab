@@ -14,6 +14,5 @@
 #include "qaoa.h"
 #include "problem_code.h"
 
-void generate_uc(int num_qubits, MKL_Complex16 *uc, MKL_INT (*Cx)(MKL_INT, int, cost_data *), cost_data *info,
-                 qaoa_statistics *stats);
+void generate_uc(qaoa_data_t *meta_data, int (*Cx)(int, int, qaoa_data_t *));
 #endif //GRAPHSIMILARITY_UC_H

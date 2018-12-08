@@ -19,7 +19,7 @@ int main(int argc, char *argv[]){
     opt_spec.nlopt_method = 28;
 
     machine_spec_t mach_spec;
-    mach_spec.num_qubits =4;
+    mach_spec.num_qubits = 20;
     mach_spec.P = 1;
     mach_spec.space_dimension = (MKL_INT)pow(2, mach_spec.num_qubits);
 
