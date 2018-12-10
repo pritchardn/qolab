@@ -17,8 +17,6 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimisation_spec_t
     meta_spec.machine_spec = mach_spec;
     meta_spec.run_spec = run_spec;
 
-    printf("%d\n", meta_spec.machine_spec->num_qubits);
-
     //Initialise UC
     meta_spec.uc = mkl_malloc((size_t)pow(2, meta_spec.machine_spec->num_qubits) * sizeof(MKL_Complex16), DEF_ALIGNMENT);
     generate_uc(&meta_spec, cost_data, Cx);
@@ -26,6 +24,7 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimisation_spec_t
     generate_ub(&meta_spec);
     //mkl_sparse_print(&meta_spec.ub, stdout);
     //Trial feval
+
     //Teardown
     qaoa_teardown(&meta_spec);
 }
