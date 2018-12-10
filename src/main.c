@@ -19,11 +19,15 @@ int main(int argc, char *argv[]){
     opt_spec.nlopt_method = 28;
 
     machine_spec_t mach_spec;
-    mach_spec.num_qubits = 20;
+    mach_spec.num_qubits = 4;
     mach_spec.P = 1;
     mach_spec.space_dimension = (MKL_INT)pow(2, mach_spec.num_qubits);
 
-    qaoa(&mach_spec, &opt_spec, &run_spec);
+    cost_data_t cost_data;
+    cost_data.cx_range = mach_spec.space_dimension;
+    cost_data.x_range = mach_spec.space_dimension;
+
+    qaoa(&mach_spec, &cost_data, &opt_spec, &run_spec);
 
     return 0;
 }

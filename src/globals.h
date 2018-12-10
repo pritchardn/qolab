@@ -20,7 +20,6 @@ void check_alloc(void *pointer);
 //Debugging
 void mkl_sparse_print(sparse_matrix_t *matrix, FILE *stream);
 
-
 typedef struct {
     double startTimes[5];
     double endTimes[5];
@@ -53,8 +52,7 @@ typedef struct{
     run_spec_t *run_spec;
     sparse_matrix_t ub;
     MKL_Complex16 *uc;
-    cost_data_t *cost_data;
     qaoa_statistics_t *qaoa_statistics;
-}qaoa_data_t;
+} qaoa_data_t;
 
 #endif
