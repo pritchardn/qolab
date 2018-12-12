@@ -32,6 +32,8 @@ typedef struct {
     bool timing;
     bool correct;
     bool report;
+    bool sampling;
+    int num_samples;
 } run_spec_t;
 
 typedef struct {

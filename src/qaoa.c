@@ -2,6 +2,7 @@
 #include "ub.h"
 #include "uc.h"
 #include "problem_code.h"
+#include "state_evolve.h"
 #include <stdio.h>
 
 
@@ -24,7 +25,9 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimisation_spec_t
     generate_ub(&meta_spec);
     //mkl_sparse_print(&meta_spec.ub, stdout);
     //Trial feval
-
+    double *parameters = mkl_calloc((size_t)mach_spec->P * 2, sizeof(double), DEF_ALIGNMENT);
+    double result = evolve((unsigned)mach_spec->P * 2, parameters, 0, &meta_spec);
+    printf("%f\n", result);
     //Teardown
     qaoa_teardown(&meta_spec);
 }
