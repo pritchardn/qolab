@@ -57,16 +57,15 @@ double expectation_value(MKL_Complex16 *state, qaoa_data_t *meta_spec){
 
 double evolve(unsigned num_params, const double *x, double grad, qaoa_data_t *meta_spec){
     double result = 0.0;
+    int P = meta_spec->machine_spec->P;
     //Generate new initial state
     MKL_Complex16 *state = mkl_calloc((size_t)meta_spec->machine_spec->space_dimension, sizeof(MKL_Complex16), DEF_ALIGNMENT);
     check_alloc(state);
     initialise_state(state, meta_spec->machine_spec);
     for(int i = 0; i < num_params/2; ++i){
-
+        spmatrix_expm_z_diag(meta_spec->uc, x[i], meta_spec->machine_spec->space_dimension, state);
+        spmatrix_expm_cheby(&meta_spec->ub, state, (MKL_Complex16){x[i+P], 0.0}, (MKL_Complex16){0.0, -meta_spec->machine_spec->num_qubits},(MKL_Complex16){0.0, meta_spec->machine_spec->num_qubits}, meta_spec->machine_spec->space_dimension);
     }
-    //for i = 0 to num_params/2
-        //diag_expm(uc, v)
-        //expm(ub, v)
     //measure (many ways to skin this cat)
     if(meta_spec->run_spec->sampling){
 

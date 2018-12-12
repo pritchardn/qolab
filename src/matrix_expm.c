@@ -23,7 +23,7 @@ void spmatrix_expm_z_diag(const MKL_Complex16 *diag, double alpha, MKL_INT nnz, 
 
 void spmatrix_expm_cheby(sparse_matrix_t *matrix, MKL_Complex16 *state, MKL_Complex16 dt,
                          MKL_Complex16 minE, MKL_Complex16 maxE,
-                         int side_len) {
+                         MKL_INT side_len) {
     int i, terms;
     double alpha;
     complex double emin, emax, t, EmEm, d2EmEm, imagM, neg1, bessj0, bessj1, bessjn, ztemp;
