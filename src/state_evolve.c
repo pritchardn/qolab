@@ -55,7 +55,7 @@ double expectation_value(MKL_Complex16 *state, qaoa_data_t *meta_spec){
     return expectation;
 }
 
-double evolve(unsigned num_params, const double *x, double grad, qaoa_data_t *meta_spec){
+double evolve(unsigned num_params, const double *x, double *grad, qaoa_data_t *meta_spec){
     double result = 0.0;
     int P = meta_spec->machine_spec->P;
     //Generate new initial state

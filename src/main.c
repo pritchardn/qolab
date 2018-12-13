@@ -19,6 +19,7 @@ int main(int argc, char *argv[]){
     opt_spec.ftol = 1e-8;
     opt_spec.xtol = 1e-8;
     opt_spec.nlopt_method = 28;
+    opt_spec.max_evals = 200*1;
 
     machine_spec_t mach_spec;
     mach_spec.num_qubits = 4;

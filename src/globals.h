@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <mkl.h>
 #include <stdbool.h>
+#include <nlopt.h>
 #include "problem_code.h"
 
 #define DEF_ALIGNMENT 64
@@ -44,8 +45,14 @@ typedef struct {
 
 typedef struct {
     int nlopt_method;
+    int max_evals;
     double xtol;
     double ftol;
+    double *parameters;
+    double *lower_bounds;
+    double *upper_bounds;
+    nlopt_opt optimiser;
+    //nlopt_opt local_opt;
 } optimisation_spec_t;
 
 
