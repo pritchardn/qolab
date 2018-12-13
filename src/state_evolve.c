@@ -68,7 +68,7 @@ double evolve(unsigned num_params, const double *x, double grad, qaoa_data_t *me
     }
     //measure (many ways to skin this cat)
     if(meta_spec->run_spec->sampling){
-
+        //TODO: Support compressed sampling
     } else {
         result = expectation_value(state, meta_spec);
     }
