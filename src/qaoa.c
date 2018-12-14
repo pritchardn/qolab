@@ -10,6 +10,9 @@
 void qaoa_teardown(qaoa_data_t *meta_spec){
     mkl_sparse_destroy(meta_spec->ub);
     mkl_free(meta_spec->uc);
+    mkl_free(meta_spec->opt_spec->parameters);
+    mkl_free(meta_spec->opt_spec->lower_bounds);
+    mkl_free(meta_spec->opt_spec->upper_bounds);
 }
 
 void optimiser_initialise(qaoa_data_t *meta_spec){
@@ -46,22 +49,25 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimisation_spec_t
     meta_spec.run_spec = run_spec;
     meta_spec.opt_spec = opt_spec;
 
+    dsecnd();
 
     //Initialise UC
     meta_spec.uc = mkl_malloc((size_t)pow(2, meta_spec.machine_spec->num_qubits) * sizeof(MKL_Complex16), DEF_ALIGNMENT);
+        meta_spec.qaoa_statistics->startTimes[0] = dsecnd();
+        meta_spec.qaoa_statistics->startTimes[1] = dsecnd();
     generate_uc(&meta_spec, cost_data, Cx);
+        meta_spec.qaoa_statistics->endTimes[1] = dsecnd();
     //Initialise UB
+        meta_spec.qaoa_statistics->startTimes[2] = dsecnd();
     generate_ub(&meta_spec);
+        meta_spec.qaoa_statistics->endTimes[2] = dsecnd();
     //mkl_sparse_print(&meta_spec.ub, stdout);
     //Trial feval
     optimiser_initialise(&meta_spec);
-    double result=0.0;
-    nlopt_optimize(meta_spec.opt_spec->optimiser, opt_spec->parameters, &result);
-    printf("%f\n", result);
-
+        meta_spec.qaoa_statistics->startTimes[3] = dsecnd();
+    meta_spec.qaoa_statistics->term_status = nlopt_optimize(meta_spec.opt_spec->optimiser, opt_spec->parameters, &meta_spec.qaoa_statistics->result);
+        meta_spec.qaoa_statistics->endTimes[3] = dsecnd();
+        meta_spec.qaoa_statistics->endTimes[0] = dsecnd();
     //Teardown
-    mkl_free(opt_spec->parameters);
-    mkl_free(opt_spec->lower_bounds);
-    mkl_free(opt_spec->upper_bounds);
     qaoa_teardown(&meta_spec);
 }
