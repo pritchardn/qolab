@@ -62,6 +62,7 @@ typedef struct{
     sparse_matrix_t ub;
     MKL_Complex16 *uc;
     qaoa_statistics_t *qaoa_statistics;
+    optimisation_spec_t *opt_spec;
 } qaoa_data_t;
 
 #endif
