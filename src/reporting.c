@@ -3,3 +3,7 @@
 //
 
 #include "reporting.h"
+
+void final_report(qaoa_data_t *meta_spec){
+    printf("here\n");
+}

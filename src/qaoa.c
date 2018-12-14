@@ -3,6 +3,7 @@
 #include "uc.h"
 #include "problem_code.h"
 #include "state_evolve.h"
+#include "reporting.h"
 #include <stdio.h>
 #include <nlopt.h>
 
@@ -71,5 +72,8 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimisation_spec_t
         meta_spec.qaoa_statistics->endTimes[3] = dsecnd();
         meta_spec.qaoa_statistics->endTimes[0] = dsecnd();
     //Teardown
+
+    final_report(&meta_spec);
+
     qaoa_teardown(&meta_spec);
 }
