@@ -66,6 +66,7 @@ double evolve(unsigned num_params, const double *x, double *grad, qaoa_data_t *m
         spmatrix_expm_z_diag(meta_spec->uc, x[i], meta_spec->machine_spec->space_dimension, state);
         spmatrix_expm_cheby(&meta_spec->ub, state, (MKL_Complex16){x[i+P], 0.0}, (MKL_Complex16){0.0, -meta_spec->machine_spec->num_qubits},(MKL_Complex16){0.0, meta_spec->machine_spec->num_qubits}, meta_spec->machine_spec->space_dimension);
     }
+    meta_spec->qaoa_statistics->num_evals++;
     //measure (many ways to skin this cat)
     if(meta_spec->run_spec->sampling){
         //TODO: Support compressed sampling
@@ -75,5 +76,8 @@ double evolve(unsigned num_params, const double *x, double *grad, qaoa_data_t *m
     //teardown
     mkl_free(state);
     //Return single value;
+    if(result > meta_spec->qaoa_statistics->best_result){
+        meta_spec->qaoa_statistics->best_result = result;
+    }
     return result;
 }

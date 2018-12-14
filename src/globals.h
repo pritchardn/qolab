@@ -24,9 +24,10 @@ void mkl_sparse_print(sparse_matrix_t *matrix, FILE *stream);
 typedef struct {
     double startTimes[5];
     double endTimes[5];
-    double result, classical_exp, random_exp;
+    double result, classical_exp, random_exp, best_result;
     int max_value, max_index;
     int term_status;
+    int num_evals;
 } qaoa_statistics_t;
 
 typedef struct {

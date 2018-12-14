@@ -44,6 +44,8 @@ void optimiser_initialise(qaoa_data_t *meta_spec){
 void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimisation_spec_t *opt_spec, run_spec_t *run_spec){
     qaoa_data_t meta_spec;
     qaoa_statistics_t statistics;
+    statistics.num_evals = 0;
+    statistics.best_result = -INFINITY;
     meta_spec.qaoa_statistics = &statistics;
     meta_spec.machine_spec = mach_spec;
     meta_spec.run_spec = run_spec;
