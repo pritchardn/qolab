@@ -6,10 +6,10 @@
 #define QOLAB_REPORTING_H
 #include "globals.h"
 
-void machine_report(machine_spec_t * mach_spec);
-void timing_report(qaoa_statistics_t *statistics);
-void result_report(qaoa_statistics_t *statistics);
-void optimiser_report(optimisation_spec_t *opt_spec);
+void machine_report(machine_spec_t * mach_spec, FILE *outfile);
+void timing_report(qaoa_statistics_t *statistics, FILE *outfile);
+void result_report(qaoa_statistics_t *statistics, FILE *outfile);
+void optimiser_report(optimisation_spec_t *opt_spec, FILE *outfile);
 
 void iteration_report(qaoa_data_t *meta_spec);
 
