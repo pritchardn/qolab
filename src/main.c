@@ -14,6 +14,7 @@ int main(int argc, char *argv[]){
     run_spec.timing = true;
     run_spec.sampling = false;
     run_spec.num_samples = 0;
+    run_spec.outfile = stdout;
 
     optimisation_spec_t opt_spec;
     opt_spec.ftol = 1e-8;

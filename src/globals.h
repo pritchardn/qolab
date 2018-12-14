@@ -36,6 +36,7 @@ typedef struct {
     bool report;
     bool sampling;
     int num_samples;
+    FILE *outfile;
 } run_spec_t;
 
 typedef struct {
