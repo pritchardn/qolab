@@ -41,12 +41,21 @@ void result_report(qaoa_statistics_t *statistics, FILE *outfile){
                      statistics->term_status);
 }
 
-void optimiser_report(optimisation_spec_t *opt_spec, FILE *outfile){
-
+void optimiser_report(optimisation_spec_t *opt_spec, int P, FILE *outfile){
+    fprintf(outfile, "Optimisation report\n"
+                     "%d Method\n"
+                     "%d Max evals\n"
+                     "%f xtol\n"
+                     "%f ftol\n",
+                     opt_spec->nlopt_method,
+                     opt_spec->max_evals,
+                     opt_spec->xtol,
+                     opt_spec->ftol);
 }
 
 void final_report(qaoa_data_t *meta_spec){
     machine_report(meta_spec->machine_spec, stdout);
     timing_report(meta_spec->qaoa_statistics, stdout);
     result_report(meta_spec->qaoa_statistics, stdout);
+    optimiser_report(meta_spec->opt_spec, meta_spec->machine_spec->P, stdout);
 }
