@@ -86,11 +86,19 @@ void optimiser_report(optimisation_spec_t *opt_spec, int P, FILE *outfile){
 }
 
 void final_report(qaoa_data_t *meta_spec){
-    FILE *test = file_generate(meta_spec);
+    FILE *oFile;
+    if(meta_spec->run_spec->report){
+        oFile = file_generate(meta_spec);
+        meta_spec->run_spec->outfile = oFile;
+    } else {
+        meta_spec->run_spec->outfile = stdout;
+    }
     machine_report(meta_spec->machine_spec, meta_spec->run_spec->outfile);
     timing_report(meta_spec->qaoa_statistics, meta_spec->run_spec->outfile);
     optimiser_report(meta_spec->opt_spec, meta_spec->machine_spec->P, meta_spec->run_spec->outfile);
     result_report(meta_spec->qaoa_statistics, meta_spec->run_spec->outfile);
-    fprintf(test, "Test\n");
-    fclose(test);
+    if(meta_spec->run_spec->report){
+        fprintf(meta_spec->run_spec->outfile, "Test\n");
+        fclose(meta_spec->run_spec->outfile);
+    }
 }
