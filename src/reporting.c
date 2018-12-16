@@ -61,8 +61,8 @@ void optimiser_report(optimisation_spec_t *opt_spec, int P, FILE *outfile){
 }
 
 void final_report(qaoa_data_t *meta_spec){
-    machine_report(meta_spec->machine_spec, stdout);
-    timing_report(meta_spec->qaoa_statistics, stdout);
-    result_report(meta_spec->qaoa_statistics, stdout);
-    optimiser_report(meta_spec->opt_spec, meta_spec->machine_spec->P, stdout);
+    machine_report(meta_spec->machine_spec, meta_spec->run_spec->outfile);
+    timing_report(meta_spec->qaoa_statistics, meta_spec->run_spec->outfile);
+    optimiser_report(meta_spec->opt_spec, meta_spec->machine_spec->P, meta_spec->run_spec->outfile);
+    result_report(meta_spec->qaoa_statistics, meta_spec->run_spec->outfile);
 }
