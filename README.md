@@ -1,9 +1,16 @@
 # Qolab
 
-Qolab is a C + Intel MKL simulation package for the Quantum Approximate Optimisation Algorithm (QAOA)
+Qolab is a C + Intel MKL simulation package/library for the Quantum Approximate Optimisation Algorithm (QAOA)
 
-## Installation
+This package implements the major backbone required for high-performant simulations of the QAOA.
+Emphasis is placed on the ability to implement a vast number of high-level parameters (optimisation scheme, decomposition etc.)
+simply.
 
+## Installation/Setup
+
+After implementing the problem-specific cost function code should be compiled using the provided makefile.
+
+Make sure to adjust the makefile to include the path to your MKL installation root
 
 ## Usage
 
