@@ -16,15 +16,29 @@ void timing_report(qaoa_statistics_t *statistics, FILE *outfile){
                      "%f Total\n"
                      "%f UC\n"
                      "%f UB\n"
-                     "%f Optimisation",
+                     "%f Optimisation\n"
+                     "%d #Evals\n",
                      statistics->endTimes[0] - statistics->startTimes[0],
                      statistics->endTimes[1] - statistics->startTimes[1],
                      statistics->endTimes[2] - statistics->startTimes[2],
-                     statistics->endTimes[3] - statistics->startTimes[3]);
+                     statistics->endTimes[3] - statistics->startTimes[3],
+                     statistics->num_evals);
 }
 
 void result_report(qaoa_statistics_t *statistics, FILE *outfile){
-
+    fprintf(outfile, "Result report:\n"
+                     "%d %d gOpt, Loc\n"
+                     "%f Final Result\n"
+                     "%f Best Result\n"
+                     "%f Classical Exp\n"
+                     "%f Initial Exp\n"
+                     "%d Termination value\n",
+                     statistics->max_value, statistics->max_index,
+                     statistics->result,
+                     statistics->best_result,
+                     statistics->classical_exp,
+                     statistics->random_exp,
+                     statistics->term_status);
 }
 
 void optimiser_report(optimisation_spec_t *opt_spec, FILE *outfile){
@@ -34,4 +48,5 @@ void optimiser_report(optimisation_spec_t *opt_spec, FILE *outfile){
 void final_report(qaoa_data_t *meta_spec){
     machine_report(meta_spec->machine_spec, stdout);
     timing_report(meta_spec->qaoa_statistics, stdout);
+    result_report(meta_spec->qaoa_statistics, stdout);
 }
