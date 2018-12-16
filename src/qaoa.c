@@ -8,6 +8,35 @@
 #include "state_evolve.h"
 #include "reporting.h"
 
+//TODO Unit test all of the these
+void parameter_checking(qaoa_data_t *meta_spec) {
+    //Check machine specification
+    if (meta_spec->machine_spec->num_qubits <= 0) {
+        fprintf(stderr, "Invalid number of qubits.\n");
+        exit(EXIT_FAILURE);
+    }
+    if (meta_spec->machine_spec->P <= 0) {
+        fprintf(stderr, "Invalid amount of decomposition.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    //Check run specification
+    if (meta_spec->run_spec->num_samples <= 0 && meta_spec->run_spec->sampling == true) {
+        fprintf(stderr, "Too few samples.\n");
+        exit(EXIT_FAILURE);
+    }
+    if (meta_spec->run_spec->outfile == NULL) {
+        fprintf(stderr, "No output location.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    //Check optimisation specification
+    if (meta_spec->opt_spec->max_evals <= 0) {
+        fprintf(stderr, "Invalid evaluation count.\n");
+        exit(EXIT_FAILURE);
+    }
+
+}
 
 void qaoa_teardown(qaoa_data_t *meta_spec){
     mkl_sparse_destroy(meta_spec->ub);
@@ -41,7 +70,6 @@ void optimiser_initialise(qaoa_data_t *meta_spec){
     nlopt_set_maxeval(meta_spec->opt_spec->optimiser, meta_spec->opt_spec->max_evals);
 }
 
-
 void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimisation_spec_t *opt_spec, run_spec_t *run_spec){
     qaoa_data_t meta_spec;
     qaoa_statistics_t statistics;
@@ -51,6 +79,8 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimisation_spec_t
     meta_spec.machine_spec = mach_spec;
     meta_spec.run_spec = run_spec;
     meta_spec.opt_spec = opt_spec;
+
+    parameter_checking(&meta_spec);
 
     dsecnd();
 
