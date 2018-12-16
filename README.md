@@ -27,3 +27,9 @@ Please refer to the currently open issues and project to see what is already com
 
 ## License
 [GPLv3] 
+
+## Acknowledgements
+
+This package currently relies on a number of other libraries. We are greatful for their work.
+* Intel MKL https://software.intel.com/en-us/mkl
+* Nlopt https://nlopt.readthedocs.io/en/latest/
