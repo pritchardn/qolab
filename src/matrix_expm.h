@@ -1,7 +1,3 @@
-//
-// Created by nicholas on 6/07/18.
-//
-
 #ifndef GRAPHSIMILARITY_MATRIX_EXPM_H
 #define GRAPHSIMILARITY_MATRIX_EXPM_H
 

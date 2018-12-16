@@ -1,13 +1,20 @@
-//
-// Created by nicholas on 6/07/18.
-//
-
 #include "matrix_expm.h"
 #include "globals.h"
 
+/**
+ * Computes action of the matrix exponential of a diagonal matrix applied to a vector.
+ * This requires the matrix is represented as a vector of complex numbers.
+ * @param diag The 'matrix' to be exponentiated
+ * @param alpha A scaling factor
+ * @param nnz The size of the matrix
+ * @param state The output state, should be nnz in length
+ */
 void spmatrix_expm_z_diag(const MKL_Complex16 *diag, double alpha, MKL_INT nnz, MKL_Complex16 *state) {
+    check_alloc(state);
+
     MKL_Complex16 *tempValues = mkl_calloc((size_t) nnz, sizeof(MKL_Complex16), DEF_ALIGNMENT);
     check_alloc(tempValues);
+
     MKL_Complex16 *resultValues = mkl_malloc(nnz * sizeof(MKL_Complex16), DEF_ALIGNMENT);
     check_alloc(resultValues);
 
@@ -21,6 +28,17 @@ void spmatrix_expm_z_diag(const MKL_Complex16 *diag, double alpha, MKL_INT nnz, 
     mkl_free(resultValues);
 }
 
+/**
+ * Computes the action of the matrix exponential of a general matrix applied to a vector.
+ * Requires the minimal and maximal eigenvalue of the matrix to be passed beforehand.
+ * Makes use of a Chebyshev polynomial expansion method.
+ * @param matrix The MKl sparse matrix to be exponentiated
+ * @param state The vector to which the action is applied
+ * @param dt A complex number scaling factor
+ * @param minE The minimal eigen-value
+ * @param maxE The maximal eigen-value
+ * @param side_len
+ */
 void spmatrix_expm_cheby(sparse_matrix_t *matrix, MKL_Complex16 *state, MKL_Complex16 dt,
                          MKL_Complex16 minE, MKL_Complex16 maxE,
                          MKL_INT side_len) {

@@ -1,9 +1,5 @@
-//
-// Created by nicholas on 28/06/18.
-//
 #include "uc.h"
 
-//TODO: Use machine_spec structs
 void generate_uc(qaoa_data_t *meta_data, cost_data_t *cost_data, int (*Cx)(int, int, cost_data_t *)) {
     int current, i, num_qubits;
     num_qubits = meta_data->machine_spec->num_qubits;

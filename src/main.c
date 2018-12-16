@@ -1,11 +1,15 @@
-//
-// Created by nicholas on 4/12/18.
-//
+/**
+ * @author Nicholas Pritchard <21726929@student.uwa.edu.au>
+ * @version 1.0
+ */
 
-#include "main.h"
 #include "qaoa.h"
-#include <math.h>
+#include <mathimf.h>
 
+/*
+ * An example main file which runs our example solution
+ * All parameters which must be specified are in this example.
+ */
 int main(int argc, char *argv[]){
 
     run_spec_t run_spec;
@@ -20,7 +24,7 @@ int main(int argc, char *argv[]){
     opt_spec.ftol = 1e-8;
     opt_spec.xtol = 1e-8;
     opt_spec.nlopt_method = 28;
-    opt_spec.max_evals = 200*1;
+    opt_spec.max_evals = 200 * 1;
 
     machine_spec_t mach_spec;
     mach_spec.num_qubits = 4;

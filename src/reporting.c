@@ -1,7 +1,3 @@
-//
-// Created by nicholas on 14/12/18.
-//
-
 #include <time.h>
 #include "reporting.h"
 

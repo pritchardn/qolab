@@ -1,6 +1,3 @@
-//
-// Created by nicholas on 10/12/18.
-//
 #include <mkl.h>
 #include <mathimf.h>
 #include "state_evolve.h"
@@ -24,6 +21,7 @@ void *initialise_state(MKL_Complex16 *state, machine_spec_t *mach_spec){
 void compute_probabilities(MKL_Complex16 * state, qaoa_data_t *meta_spec, double *output){
     MKL_Complex16 *z_probabilities = mkl_malloc(meta_spec->machine_spec->space_dimension * sizeof(MKL_Complex16), DEF_ALIGNMENT);
     check_alloc(z_probabilities);
+    //TODO: Unit test for normalisation
     //double result = 0.0;
     //cblas_zdotc_sub(space_dimension, state, 1, state, 1, &result);
     //printf("%f\n", result);
@@ -43,6 +41,7 @@ double expectation_value(MKL_Complex16 *state, qaoa_data_t *meta_spec){
     hamiltonian = mkl_malloc(space_dimension * sizeof(double), DEF_ALIGNMENT);
     extract_hamiltonian_double(meta_spec->uc, hamiltonian, space_dimension);
     expectation = cblas_ddot(space_dimension, probabilities, 1, hamiltonian, 1);
+    //A potential measurement method, finds the most likely outcome.
     /*int ind_max = 0;
     double max_prob = (double) -INFINITY;
     for (int i = 0; i < space_dimension; ++i) {
@@ -62,12 +61,13 @@ double evolve(unsigned num_params, const double *x, double *grad, qaoa_data_t *m
     MKL_Complex16 *state = mkl_calloc((size_t)meta_spec->machine_spec->space_dimension, sizeof(MKL_Complex16), DEF_ALIGNMENT);
     check_alloc(state);
     initialise_state(state, meta_spec->machine_spec);
+    //Apply our QAOA generation
     for(int i = 0; i < num_params/2; ++i){
         spmatrix_expm_z_diag(meta_spec->uc, x[i], meta_spec->machine_spec->space_dimension, state);
         spmatrix_expm_cheby(&meta_spec->ub, state, (MKL_Complex16){x[i+P], 0.0}, (MKL_Complex16){0.0, -meta_spec->machine_spec->num_qubits},(MKL_Complex16){0.0, meta_spec->machine_spec->num_qubits}, meta_spec->machine_spec->space_dimension);
     }
     meta_spec->qaoa_statistics->num_evals++;
-    //measure (many ways to skin this cat)
+    //measure
     if(meta_spec->run_spec->sampling){
         //TODO: Support compressed sampling
     } else {

@@ -1,7 +1,3 @@
-//
-// Created by nicholas on 28/06/18.
-//
-
 #ifndef GRAPHSIMILARITY_UC_H
 #define GRAPHSIMILARITY_UC_H
 

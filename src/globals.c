@@ -1,5 +1,11 @@
 #include "globals.h"
 
+/**
+ * Helper function which returns the factorial of an int.
+ * TODO: Unit test for overflow
+ * @param n
+ * @return MKL_INT (long long int)
+ */
 MKL_INT factorial(int n) {
     MKL_INT result = 0;
     if (n == 0) {
@@ -14,6 +20,10 @@ MKL_INT factorial(int n) {
     return result;
 }
 
+/**
+ * Helper function to check the validity of a pointer and failes gracefully
+ * @param pointer
+ */
 void check_alloc(void *pointer) {
     if (pointer == NULL) {
         fprintf(stderr, "Alloc fail\n");
@@ -21,7 +31,16 @@ void check_alloc(void *pointer) {
     }
 }
 
+/**
+ * A custom mkl error code parser
+ * @param error_code
+ * @param stream The specified stream to send debug messages to
+ * TODO: Test for file, stream and NULL
+ */
 void mkl_error_parse(int error_code, FILE *stream) {
+    if (stream == NULL) {
+        stream = stderr;
+    }
     switch (error_code) {
         case SPARSE_STATUS_SUCCESS:
             //fprintf(stream, "%d SUCCESS\n", error_code);
@@ -48,27 +67,4 @@ void mkl_error_parse(int error_code, FILE *stream) {
             fprintf(stream, "Something else\n");
             break;
     }
-}
-
-void mkl_sparse_print(sparse_matrix_t *matrix, FILE *stream){
-    sparse_status_t status;
-    sparse_index_base_t base;
-    MKL_INT rows, cols;
-    MKL_INT *rows_start, *rows_end, *col_indx;
-    MKL_Complex16 *values;
-    status = mkl_sparse_z_export_csc(*matrix, &base, &rows, &cols, &rows_start, &rows_end, &col_indx, &values);
-    mkl_error_parse(status, stream);
-
-    MKL_INT nnz = 0;
-    for(MKL_INT i = 0; i < rows; ++i){
-        nnz += rows_end[i] - rows_start[i];
-        fprintf(stream, "%lld %lld\n", rows_start[i], rows_end[i]);
-    }
-    for (int j = 0; j < nnz; ++j) {
-        fprintf(stream, "%f + %fi, ", values[j].real, values[j].imag);
-    }printf("\n");
-    for (int j = 0; j < nnz; ++j) {
-        fprintf(stream, "%lld ", col_indx[j]);
-    }printf("\n");
-    fprintf(stream, "nnz: %lld\n", nnz);
 }

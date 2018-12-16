@@ -1,7 +1,3 @@
-//
-// Created by nicholas on 10/12/18.
-//
-
 #ifndef QOLAB_STATE_EVOLVE_H
 #define QOLAB_STATE_EVOLVE_H
 #include "globals.h"
