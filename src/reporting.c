@@ -51,6 +51,13 @@ void optimiser_report(optimisation_spec_t *opt_spec, int P, FILE *outfile){
                      opt_spec->max_evals,
                      opt_spec->xtol,
                      opt_spec->ftol);
+    int i,j;
+    for (i = 0; i < P; ++i) {
+        fprintf(outfile, "%f ", opt_spec->parameters[i]);
+    }fprintf(outfile, "Gammas\n");
+    for (j = 0; j < P; ++j) {
+        fprintf(outfile, "%f ", opt_spec->parameters[j+P]);
+    }fprintf(outfile, "Betas\n");
 }
 
 void final_report(qaoa_data_t *meta_spec){
