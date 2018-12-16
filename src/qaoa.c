@@ -60,17 +60,24 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimisation_spec_t
     meta_spec.qaoa_statistics->startTimes[1] = dsecnd();
     generate_uc(&meta_spec, cost_data, Cx);
     meta_spec.qaoa_statistics->endTimes[1] = dsecnd();
+    if (meta_spec.run_spec->verbose) {
+        printf("UC Created\n");
+    }
     //Initialise UB
     meta_spec.qaoa_statistics->startTimes[2] = dsecnd();
     generate_ub(&meta_spec);
     meta_spec.qaoa_statistics->endTimes[2] = dsecnd();
-    //mkl_sparse_print(&meta_spec.ub, stdout);
-    //Trial feval
+    if (meta_spec.run_spec->verbose) {
+        printf("UB Created\n");
+    }
     optimiser_initialise(&meta_spec);
     meta_spec.qaoa_statistics->startTimes[3] = dsecnd();
     meta_spec.qaoa_statistics->term_status = nlopt_optimize(meta_spec.opt_spec->optimiser, opt_spec->parameters, &meta_spec.qaoa_statistics->result);
     meta_spec.qaoa_statistics->endTimes[3] = dsecnd();
     meta_spec.qaoa_statistics->endTimes[0] = dsecnd();
+    if (meta_spec.run_spec->verbose) {
+        printf("Optimisation complete\n");
+    }
     //Teardown
 
     final_report(&meta_spec);

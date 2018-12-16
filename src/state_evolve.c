@@ -79,5 +79,8 @@ double evolve(unsigned num_params, const double *x, double *grad, qaoa_data_t *m
     if(result > meta_spec->qaoa_statistics->best_result){
         meta_spec->qaoa_statistics->best_result = result;
     }
+    if (meta_spec->run_spec->verbose) {
+        printf("%d \n", meta_spec->qaoa_statistics->num_evals);
+    }
     return result;
 }

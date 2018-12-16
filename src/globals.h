@@ -34,6 +34,7 @@ typedef struct {
     bool correct;       // Do we report correctness?
     bool report;        // Are we reporting to file?
     bool sampling;      // Are we sampling?
+    bool verbose;       // Should we print everything?
     int num_samples;    // The number of samples we use
     FILE *outfile;      // The stream we actually write to (can be stdout or a file)
 } run_spec_t;
