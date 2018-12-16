@@ -2,7 +2,32 @@
 // Created by nicholas on 14/12/18.
 //
 
+#include <time.h>
 #include "reporting.h"
+
+FILE *file_generate(qaoa_data_t *meta_spec){
+    FILE *rtn;
+    struct tm *now;
+    time_t seconds;
+    char buffer[128];
+
+    seconds = time(NULL);
+    now = localtime(&seconds);
+    buffer[0] = '\0';
+    sprintf(buffer, "Q%dP%dM%dT%d%d%d%d%d.out",
+            meta_spec->machine_spec->num_qubits,
+            meta_spec->machine_spec->P,
+            meta_spec->opt_spec->nlopt_method,
+            now->tm_mday, now->tm_mon+1, now->tm_hour, now->tm_min, now->tm_sec);
+
+    rtn = fopen(buffer, "w+");
+
+    if(rtn==NULL){
+        perror("Attempting to open report file");
+    }
+    printf("Writing to%s\n",buffer);
+    return rtn;
+}
 
 void machine_report(machine_spec_t * mach_spec, FILE *outfile){
     fprintf(outfile, "Machine Specification:\n"
@@ -61,8 +86,11 @@ void optimiser_report(optimisation_spec_t *opt_spec, int P, FILE *outfile){
 }
 
 void final_report(qaoa_data_t *meta_spec){
+    FILE *test = file_generate(meta_spec);
     machine_report(meta_spec->machine_spec, meta_spec->run_spec->outfile);
     timing_report(meta_spec->qaoa_statistics, meta_spec->run_spec->outfile);
     optimiser_report(meta_spec->opt_spec, meta_spec->machine_spec->P, meta_spec->run_spec->outfile);
     result_report(meta_spec->qaoa_statistics, meta_spec->run_spec->outfile);
+    fprintf(test, "Test\n");
+    fclose(test);
 }
