@@ -90,11 +90,14 @@ void final_report(qaoa_data_t *meta_spec){
         meta_spec->run_spec->outfile = stdout;
     }
     machine_report(meta_spec->machine_spec, meta_spec->run_spec->outfile);
-    timing_report(meta_spec->qaoa_statistics, meta_spec->run_spec->outfile);
-    optimiser_report(meta_spec->opt_spec, meta_spec->machine_spec->P, meta_spec->run_spec->outfile);
-    result_report(meta_spec->qaoa_statistics, meta_spec->run_spec->outfile);
+    if (meta_spec->run_spec->timing) {
+        timing_report(meta_spec->qaoa_statistics, meta_spec->run_spec->outfile);
+    }
+    if (meta_spec->run_spec->correct) {
+        optimiser_report(meta_spec->opt_spec, meta_spec->machine_spec->P, meta_spec->run_spec->outfile);
+        result_report(meta_spec->qaoa_statistics, meta_spec->run_spec->outfile);
+    }
     if(meta_spec->run_spec->report){
-        fprintf(meta_spec->run_spec->outfile, "Test\n");
         fclose(meta_spec->run_spec->outfile);
     }
 }
