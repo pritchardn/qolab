@@ -8,5 +8,5 @@
  * @return A single integer value
  */
 int Cx(int i, int num_qubits, cost_data_t *cost_data){
-    return num_qubits;
+    return i;
 }

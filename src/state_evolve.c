@@ -103,11 +103,9 @@ MKL_INT build_interval_array(qaoa_data_t *meta_spec, const double *probabilities
     check_alloc(set_flag);
 
     extract_hamiltonian_double(meta_spec->uc, hamiltonian, space_dimension);
-
     for (MKL_INT i = 0; i < space_dimension; ++i) {
         if (!set_flag[((int) hamiltonian[i]) - 1]) {
-            result_vals[nnz] = ((int) hamiltonian[i]) - 1;
-            printf("%lld\n", result_vals[nnz]);
+            result_vals[nnz] = ((int) hamiltonian[i]);
             nnz++;
             set_flag[(int) hamiltonian[i] - 1] = true;
         }
@@ -160,8 +158,6 @@ double perform_sampling(MKL_Complex16 *state, qaoa_data_t *meta_spec) {
     if (best > meta_spec->qaoa_statistics->best_result) {
         meta_spec->qaoa_statistics->best_result = best;
     }
-    result = cblas_ddot(meta_spec->run_spec->num_samples, choices, 1, temp, 1);
-
 
     mkl_free(probabilities);
     mkl_free(sum_probs);
@@ -169,7 +165,7 @@ double perform_sampling(MKL_Complex16 *state, qaoa_data_t *meta_spec) {
     mkl_free(choice_values);
     mkl_free(choices);
     mkl_free(temp);
-    return result;
+    return best;
 }
 
 double evolve(unsigned num_params, const double *x, double *grad, qaoa_data_t *meta_spec){
