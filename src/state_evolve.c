@@ -84,7 +84,6 @@ void weighted_choice(const MKL_INT *vals, const double *weights, MKL_INT size, r
         target = rand() / (double) RAND_MAX;
         temp = binary_search(weights, target, size);
         result[i] = (vals[temp]);
-
     }
 }
 
@@ -106,8 +105,9 @@ MKL_INT build_interval_array(qaoa_data_t *meta_spec, const double *probabilities
     extract_hamiltonian_double(meta_spec->uc, hamiltonian, space_dimension);
 
     for (MKL_INT i = 0; i < space_dimension; ++i) {
-        if (!set_flag[(int) hamiltonian[i]] - 1) {
-            result_vals[nnz] = (int) hamiltonian[i] - 1;
+        if (!set_flag[((int) hamiltonian[i]) - 1]) {
+            result_vals[nnz] = ((int) hamiltonian[i]) - 1;
+            printf("%lld\n", result_vals[nnz]);
             nnz++;
             set_flag[(int) hamiltonian[i] - 1] = true;
         }

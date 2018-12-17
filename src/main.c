@@ -17,7 +17,7 @@ int main(int argc, char *argv[]){
     run_spec.report = false;
     run_spec.timing = true;
     run_spec.sampling = true;
-    run_spec.verbose = true;
+    run_spec.verbose = false;
     run_spec.num_samples = 100;
     run_spec.outfile = stdout;
 
@@ -33,7 +33,7 @@ int main(int argc, char *argv[]){
     mach_spec.space_dimension = (MKL_INT)pow(2, mach_spec.num_qubits);
 
     cost_data_t cost_data;
-    cost_data.cx_range = mach_spec.space_dimension;
+    cost_data.cx_range = 4;
     cost_data.x_range = mach_spec.space_dimension;
 
     qaoa(&mach_spec, &cost_data, &opt_spec, &run_spec);
