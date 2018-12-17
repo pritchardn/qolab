@@ -183,7 +183,6 @@ double evolve(unsigned num_params, const double *x, double *grad, qaoa_data_t *m
     meta_spec->qaoa_statistics->num_evals++;
     //measure
     if(meta_spec->run_spec->sampling){
-        //TODO: Support compressed sampling
         result = perform_sampling(state, meta_spec);
     } else {
         result = expectation_value(state, meta_spec);
