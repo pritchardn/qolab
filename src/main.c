@@ -16,9 +16,9 @@ int main(int argc, char *argv[]){
     run_spec.correct = true;
     run_spec.report = false;
     run_spec.timing = true;
-    run_spec.sampling = false;
+    run_spec.sampling = true;
     run_spec.verbose = true;
-    run_spec.num_samples = 0;
+    run_spec.num_samples = 100;
     run_spec.outfile = stdout;
 
     optimisation_spec_t opt_spec;

@@ -79,6 +79,9 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimisation_spec_t
     meta_spec.machine_spec = mach_spec;
     meta_spec.run_spec = run_spec;
     meta_spec.opt_spec = opt_spec;
+    meta_spec.cost_data = cost_data;
+
+    srand((unsigned) time(0));
 
     parameter_checking(&meta_spec);
 
@@ -88,7 +91,7 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimisation_spec_t
     meta_spec.uc = mkl_malloc((size_t)pow(2, meta_spec.machine_spec->num_qubits) * sizeof(MKL_Complex16), DEF_ALIGNMENT);
     meta_spec.qaoa_statistics->startTimes[0] = dsecnd();
     meta_spec.qaoa_statistics->startTimes[1] = dsecnd();
-    generate_uc(&meta_spec, cost_data, Cx);
+    generate_uc(&meta_spec, Cx);
     meta_spec.qaoa_statistics->endTimes[1] = dsecnd();
     if (meta_spec.run_spec->verbose) {
         printf("UC Created\n");
