@@ -1,5 +1,6 @@
 #include <mkl.h>
 #include <stdbool.h>
+#include <time.h>
 #include "problem_code.h"
 #include "globals.h"
 

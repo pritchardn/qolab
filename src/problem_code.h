@@ -1,7 +1,7 @@
 #ifndef QOLAB_PROBLEM_CODE_H
 #define QOLAB_PROBLEM_CODE_H
-#include "globals.h"
 
+#include <mkl.h>
 /**
  * A struct which contains additional information for the cost function to work
  * x_range and cx_range must both be included for all cases.

@@ -64,6 +64,7 @@ typedef struct {
 typedef struct{
     machine_spec_t *machine_spec;
     run_spec_t *run_spec;
+    cost_data_t *cost_data;
     sparse_matrix_t ub;
     MKL_Complex16 *uc;
     qaoa_statistics_t *qaoa_statistics;
