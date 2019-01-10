@@ -48,9 +48,13 @@ void qaoa_teardown(qaoa_data_t *meta_spec){
 
 //TODO: Include custom optimisation method (not nlopt)
 void optimiser_initialise(qaoa_data_t *meta_spec){
-    meta_spec->opt_spec->parameters = mkl_calloc((size_t)2 * meta_spec->machine_spec->P, sizeof(double), DEF_ALIGNMENT);
-    meta_spec->opt_spec->lower_bounds = mkl_calloc((size_t)2 * meta_spec->machine_spec->P, sizeof(double), DEF_ALIGNMENT);
-    meta_spec->opt_spec->upper_bounds = mkl_calloc((size_t)2 * meta_spec->machine_spec->P, sizeof(double), DEF_ALIGNMENT);
+    int num_params = 2 * meta_spec->machine_spec->P;
+    if (meta_spec->run_spec->restricted) {
+        num_params++;
+    }
+    meta_spec->opt_spec->parameters = mkl_calloc((size_t) num_params, sizeof(double), DEF_ALIGNMENT);
+    meta_spec->opt_spec->lower_bounds = mkl_calloc((size_t) num_params, sizeof(double), DEF_ALIGNMENT);
+    meta_spec->opt_spec->upper_bounds = mkl_calloc((size_t) num_params, sizeof(double), DEF_ALIGNMENT);
 
     for(int i = 0; i < meta_spec->machine_spec->P; ++i){
         meta_spec->opt_spec->upper_bounds[i] = 2 * (double)M_PI;
@@ -61,8 +65,16 @@ void optimiser_initialise(qaoa_data_t *meta_spec){
         meta_spec->opt_spec->parameters[i + meta_spec->machine_spec->P] = (double)M_PI/2.0;
     }
 
-    meta_spec->opt_spec->optimiser = nlopt_create(meta_spec->opt_spec->nlopt_method, (unsigned int)2*meta_spec->machine_spec->P);
-    nlopt_set_max_objective(meta_spec->opt_spec->optimiser, (nlopt_func)evolve, (void*)meta_spec);
+    meta_spec->opt_spec->optimiser = nlopt_create(meta_spec->opt_spec->nlopt_method, (unsigned int) num_params);
+
+    if (meta_spec->run_spec->restricted) {
+        meta_spec->opt_spec->upper_bounds[meta_spec->machine_spec->P] = 2 * (double) M_PI;
+        meta_spec->opt_spec->lower_bounds[meta_spec->machine_spec->P] = 0.0;
+        meta_spec->opt_spec->parameters[meta_spec->machine_spec->P] = (double) M_PI / 2.0;
+        nlopt_set_max_objective(meta_spec->opt_spec->optimiser, (nlopt_func) evolve, (void *) meta_spec);
+    } else {
+        nlopt_set_max_objective(meta_spec->opt_spec->optimiser, (nlopt_func) evolve_restricted, (void *) meta_spec);
+    }
     nlopt_set_lower_bounds(meta_spec->opt_spec->optimiser, meta_spec->opt_spec->lower_bounds);
     nlopt_set_upper_bounds(meta_spec->opt_spec->optimiser, meta_spec->opt_spec->upper_bounds);
     nlopt_set_xtol_abs1(meta_spec->opt_spec->optimiser, meta_spec->opt_spec->xtol);
@@ -98,7 +110,7 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimisation_spec_t
     }
     //Initialise UB
     meta_spec.qaoa_statistics->startTimes[2] = dsecnd();
-    generate_ub(&meta_spec);
+    generate_ub(&meta_spec, mask);
     meta_spec.qaoa_statistics->endTimes[2] = dsecnd();
     if (meta_spec.run_spec->verbose) {
         printf("UB Created\n");

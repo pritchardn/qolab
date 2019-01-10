@@ -2,6 +2,7 @@
 #define QOLAB_PROBLEM_CODE_H
 
 #include <mkl.h>
+#include <stdbool.h>
 /**
  * A struct which contains additional information for the cost function to work
  * x_range and cx_range must both be included for all cases.
@@ -12,5 +13,7 @@ typedef struct {
 } cost_data_t;
 
 int Cx(int i, int num_qubits, cost_data_t *cost_data);
+
+bool mask(unsigned int i);
 
 #endif //QOLAB_PROBLEM_CODE_H

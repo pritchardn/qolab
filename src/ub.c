@@ -1,6 +1,6 @@
 #include "ub.h"
 
-void generate_ub(qaoa_data_t *meta_data) {
+void generate_ub(qaoa_data_t *meta_data, bool (*mask)(unsigned int)) {
     sparse_status_t status;
     int num_qubits = meta_data->machine_spec->num_qubits;
     MKL_INT nnz = 0;
@@ -18,10 +18,12 @@ void generate_ub(qaoa_data_t *meta_data) {
         col_begin[i] = nnz;
         for (unsigned int j = 0; j < num_qubits; ++j) {
             unsigned int row = ((i ^ ((unsigned int) 1 << j)));
-            values[nnz].imag = -1.0;
-            col_end[i] = nnz;
-            row_index[nnz] = (MKL_INT) row;
-            nnz++;
+            if (mask(row)) {
+                values[nnz].imag = -1.0;
+                col_end[i] = nnz;
+                row_index[nnz] = (MKL_INT) row;
+                nnz++;
+            }
         }
     }
     status = mkl_sparse_z_create_csc(&meta_data->ub, (sparse_index_base_t) SPARSE_INDEX_BASE_ZERO, \

@@ -198,3 +198,43 @@ double evolve(unsigned num_params, const double *x, double *grad, qaoa_data_t *m
     }
     return result;
 }
+
+double evolve_restricted(unsigned num_params, const double *x, double *grad, qaoa_data_t *meta_spec) {
+    double result;
+    int P = meta_spec->machine_spec->P;
+    //Generate new initial state
+    MKL_Complex16 *state = mkl_calloc((size_t) meta_spec->machine_spec->space_dimension, sizeof(MKL_Complex16),
+                                      DEF_ALIGNMENT);
+    check_alloc(state);
+    initialise_state(state, meta_spec->machine_spec);
+    //Apply our QAOA generation
+    for (int i = 0; i < (num_params - 1) / 2; ++i) {
+        spmatrix_expm_cheby(&meta_spec->ub, state, (MKL_Complex16) {x[i + P], 0.0},
+                            (MKL_Complex16) {0.0, -meta_spec->machine_spec->num_qubits},
+                            (MKL_Complex16) {0.0, meta_spec->machine_spec->num_qubits},
+                            meta_spec->machine_spec->space_dimension);
+        spmatrix_expm_z_diag(meta_spec->uc, x[i], meta_spec->machine_spec->space_dimension, state);
+    }
+    spmatrix_expm_cheby(&meta_spec->ub, state, (MKL_Complex16) {x[num_params], 0.0},
+                        (MKL_Complex16) {0.0, -meta_spec->machine_spec->num_qubits},
+                        (MKL_Complex16) {0.0, meta_spec->machine_spec->num_qubits},
+                        meta_spec->machine_spec->space_dimension);
+
+    meta_spec->qaoa_statistics->num_evals++;
+    //measure
+    if (meta_spec->run_spec->sampling) {
+        result = perform_sampling(state, meta_spec);
+    } else {
+        result = expectation_value(state, meta_spec);
+    }
+    //teardown
+    mkl_free(state);
+    //Return single value;
+    if (result > meta_spec->qaoa_statistics->best_result) {
+        meta_spec->qaoa_statistics->best_result = result;
+    }
+    if (meta_spec->run_spec->verbose) {
+        printf("%d \n", meta_spec->qaoa_statistics->num_evals);
+    }
+    return result;
+}

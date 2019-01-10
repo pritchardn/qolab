@@ -10,3 +10,7 @@
 int Cx(int i, int num_qubits, cost_data_t *cost_data){
     return i;
 }
+
+bool mask(unsigned int i) {
+    return true;
+}

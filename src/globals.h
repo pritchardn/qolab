@@ -35,6 +35,7 @@ typedef struct {
     bool report;        // Are we reporting to file?
     bool sampling;      // Are we sampling?
     bool verbose;       // Should we print everything?
+    bool restricted;    // Are we running the restricted version of the QAOA (https://arxiv.org/abs/1804.08227)
     int num_samples;    // The number of samples we use
     FILE *outfile;      // The stream we actually write to (can be stdout or a file)
 } run_spec_t;
