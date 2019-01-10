@@ -110,7 +110,7 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimisation_spec_t
     }
     //Initialise UB
     meta_spec.qaoa_statistics->startTimes[2] = dsecnd();
-    generate_ub(&meta_spec);
+    generate_ub(&meta_spec, mask);
     meta_spec.qaoa_statistics->endTimes[2] = dsecnd();
     if (meta_spec.run_spec->verbose) {
         printf("UB Created\n");

@@ -12,6 +12,6 @@
 #include <stdbool.h>
 #include "globals.h"
 
-void generate_ub(qaoa_data_t *meta_data);
+void generate_ub(qaoa_data_t *meta_data, bool (*mask)(unsigned int));
 
 #endif //GRAPHSIMILARITY_UB_H
