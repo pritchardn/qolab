@@ -18,7 +18,7 @@ int main(int argc, char *argv[]){
     run_spec.timing = true;
     run_spec.sampling = true;
     run_spec.verbose = false;
-    run_spec.restricted = false;
+    run_spec.restricted = true;
     run_spec.num_samples = 100;
     run_spec.outfile = stdout;
 
