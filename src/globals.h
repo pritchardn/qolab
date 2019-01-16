@@ -8,6 +8,7 @@
 #include "problem_code.h"
 
 #define DEF_ALIGNMENT 64
+#define PI 3.1415926535
 
 
 //Mathematical

@@ -57,20 +57,20 @@ void optimiser_initialise(qaoa_data_t *meta_spec){
     meta_spec->opt_spec->upper_bounds = mkl_calloc((size_t) num_params, sizeof(double), DEF_ALIGNMENT);
 
     for(int i = 0; i < meta_spec->machine_spec->P; ++i){
-        meta_spec->opt_spec->upper_bounds[i] = 2 * (double)M_PI;
+        meta_spec->opt_spec->upper_bounds[i] = 2 * (double) PI;
         meta_spec->opt_spec->lower_bounds[i] = 0.0;
-        meta_spec->opt_spec->upper_bounds[i+meta_spec->machine_spec->P] = (double)M_PI;
+        meta_spec->opt_spec->upper_bounds[i + meta_spec->machine_spec->P] = (double) PI;
         meta_spec->opt_spec->lower_bounds[i+meta_spec->machine_spec->P] = 0.0;
-        meta_spec->opt_spec->parameters[i] = (double)M_PI;
-        meta_spec->opt_spec->parameters[i + meta_spec->machine_spec->P] = (double)M_PI/2.0;
+        meta_spec->opt_spec->parameters[i] = (double) PI;
+        meta_spec->opt_spec->parameters[i + meta_spec->machine_spec->P] = (double) PI / 2.0;
     }
 
     meta_spec->opt_spec->optimiser = nlopt_create(meta_spec->opt_spec->nlopt_method, (unsigned int) num_params);
 
     if (meta_spec->run_spec->restricted) {
-        meta_spec->opt_spec->upper_bounds[meta_spec->machine_spec->P] = 2 * (double) M_PI;
+        meta_spec->opt_spec->upper_bounds[meta_spec->machine_spec->P] = 2 * (double) PI;
         meta_spec->opt_spec->lower_bounds[meta_spec->machine_spec->P] = 0.0;
-        meta_spec->opt_spec->parameters[meta_spec->machine_spec->P] = (double) M_PI / 2.0;
+        meta_spec->opt_spec->parameters[meta_spec->machine_spec->P] = (double) PI / 2.0;
         nlopt_set_max_objective(meta_spec->opt_spec->optimiser, (nlopt_func) evolve, (void *) meta_spec);
     } else {
         nlopt_set_max_objective(meta_spec->opt_spec->optimiser, (nlopt_func) evolve_restricted, (void *) meta_spec);
