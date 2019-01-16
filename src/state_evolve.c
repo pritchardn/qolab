@@ -10,7 +10,7 @@ void extract_hamiltonian_double(MKL_Complex16 *uc, double *hamiltonian, MKL_INT 
     }
 }
 
-void *initialise_state(MKL_Complex16 *state, machine_spec_t *mach_spec){
+void initialise_state(MKL_Complex16 *state, machine_spec_t *mach_spec) {
     MKL_Complex16 init_value;
     init_value.real = 1/sqrt(mach_spec->space_dimension);
     for(MKL_INT i = 0; i < mach_spec->space_dimension; ++i){
