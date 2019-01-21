@@ -5,11 +5,6 @@
 #include "graph_utils.h"
 #include "globals.h"
 
-
-void printFileUsage() {
-    printf("Please use correctly formatted graph files\n");
-}
-
 void random_doubles(int num_request, double *buffer) {
     for (int i = 0; i < num_request; ++i) {
         buffer[i] = rand() / (double) RAND_MAX;
