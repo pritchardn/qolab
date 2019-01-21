@@ -10,6 +10,7 @@
 typedef struct {
     MKL_INT x_range;    // The upper bound of cost-function input values.
     MKL_INT cx_range;   // The upper bound of cost-function output values.
+    MKL_INT *graph;
 } cost_data_t;
 
 int Cx(int i, int num_qubits, cost_data_t *cost_data);

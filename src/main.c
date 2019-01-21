@@ -4,6 +4,7 @@
  */
 
 #include "qaoa.h"
+#include "graph_utils.h"
 #include <mathimf.h>
 
 /*
@@ -11,7 +12,7 @@
  * All parameters which must be specified are in this example.
  */
 int main(int argc, char *argv[]){
-
+    srand(time(NULL));
     run_spec_t run_spec;
     run_spec.correct = true;
     run_spec.report = false;
@@ -36,8 +37,9 @@ int main(int argc, char *argv[]){
     cost_data_t cost_data;
     cost_data.cx_range = mach_spec.space_dimension;
     cost_data.x_range = mach_spec.space_dimension;
-
+    cost_data.graph = mkl_malloc(sizeof(MKL_INT) * mach_spec.num_qubits * mach_spec.num_qubits, DEF_ALIGNMENT);
+    generate_graph(cost_data.graph, mach_spec.num_qubits, 0.5);
     qaoa(&mach_spec, &cost_data, &opt_spec, &run_spec);
-
+    mkl_free(cost_data.graph);
     return 0;
 }
