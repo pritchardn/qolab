@@ -19,16 +19,13 @@ void random_doubles(int num_request, double *buffer) {
  * @param graph_size
  * @param prob  Defaults to 0.5
  */
-void generate_graphs(MKL_INT *graph1, MKL_INT *graph2, int graph_size, float prob) {
+void generate_graph(MKL_INT *graph1, int graph_size, float prob) {
     double *randomNums = mkl_calloc((size_t) 2 * graph_size * graph_size, sizeof(double), DEF_ALIGNMENT);
     check_alloc(randomNums);
     random_doubles(graph_size * graph_size * 2, randomNums);
     for (int i = 0; i < graph_size * graph_size; ++i) {
         if (randomNums[i] < prob) {
             graph1[i] = 1;
-        }
-        if (randomNums[i + graph_size] < prob) {
-            graph2[i] = 1;
         }
     }
     mkl_free(randomNums);

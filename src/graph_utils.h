@@ -8,7 +8,7 @@
 #include <malloc.h>
 #include <mkl.h>
 
-void generate_graphs(MKL_INT *graph1, MKL_INT *graph2, int graph_size, float prob);
+void generate_graph(MKL_INT *graph1, int graph_size, float prob);
 void copy_graph(const MKL_INT *src, MKL_INT *dest, int graph_size);
 void generate_random(MKL_INT *graph, int graph_size, float prob);
 void generate_undirected(MKL_INT *graph1, int graph_size, float prob);
