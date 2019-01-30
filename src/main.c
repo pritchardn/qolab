@@ -37,6 +37,7 @@ int main(int argc, char *argv[]){
     cost_data_t cost_data;
     cost_data.cx_range = mach_spec.space_dimension;
     cost_data.x_range = mach_spec.space_dimension;
+    cost_data.num_vertices = mach_spec.num_qubits;
     cost_data.graph = mkl_malloc(sizeof(MKL_INT) * mach_spec.num_qubits * mach_spec.num_qubits, DEF_ALIGNMENT);
     generate_graph(cost_data.graph, mach_spec.num_qubits, 0.5);
     qaoa(&mach_spec, &cost_data, &opt_spec, &run_spec);
