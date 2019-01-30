@@ -11,6 +11,6 @@ int Cx(int i, int num_qubits, cost_data_t *cost_data){
     return i;
 }
 
-bool mask(unsigned int i) {
+bool mask(unsigned int i, cost_data_t *cost_data) {
     return true;
 }

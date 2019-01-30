@@ -15,6 +15,6 @@ typedef struct {
 
 int Cx(int i, int num_qubits, cost_data_t *cost_data);
 
-bool mask(unsigned int i);
+bool mask(unsigned int i, cost_data_t *cost_data);
 
 #endif //QOLAB_PROBLEM_CODE_H
