@@ -1,0 +1,29 @@
+#!/bin/bash --login
+# SLURM directives
+#
+# Here we specify to SLURM we want two nodes (--nodes=2) with
+# a wall-clock time limit of one minute (--time=00:01:00)
+#
+# Replace [your-project] with the appropriate project name
+# following --account (e.g., --account=project123)
+
+#SBATCH --nodes=1
+#SBATCH --time=00:10:00
+#SBATCH --account=ACCOUNT_NAME
+#SBATCH --export=NONE
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=EMAIL_ADDRESS
+#SBATCH --partition=debugq
+
+# To launch the job, we specify to srun 48 MPI tasks (-n 48)
+# with 24 MPI tasks per node
+#
+# Note we avoid any inadvertent OpenMP threading by setting
+# OMP_NUM_THREADS=1
+module swap PrgEnv-cray PrgEnv-intel
+export OMP_NUM_THREADS=24
+
+# --export=all is recommended to export the current environment
+# variables into the batch job environment
+
+srun --export=all -n 1 -c 24  --cpu_bind=sockets ../PATH_TO_EXECUTABLE
