@@ -1,6 +1,6 @@
 #include "ub.h"
 
-void generate_ub(qaoa_data_t *meta_data, bool (*mask)(unsigned int)) {
+void generate_ub(qaoa_data_t *meta_data, bool (*mask)(unsigned int, cost_data_t *cost_data)) {
     sparse_status_t status;
     int num_qubits = meta_data->machine_spec->num_qubits;
     MKL_INT nnz = 0;
@@ -18,7 +18,7 @@ void generate_ub(qaoa_data_t *meta_data, bool (*mask)(unsigned int)) {
         col_begin[i] = nnz;
         for (unsigned int j = 0; j < num_qubits; ++j) {
             unsigned int row = ((i ^ ((unsigned int) 1 << j)));
-            if (mask(row)) {
+            if (mask(row, meta_data->cost_data)) {
                 values[nnz].imag = -1.0;
                 col_end[i] = nnz;
                 row_index[nnz] = (MKL_INT) row;
