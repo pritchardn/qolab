@@ -17,7 +17,7 @@ int main(int argc, char *argv[]){
     run_spec.correct = true;
     run_spec.report = false;
     run_spec.timing = true;
-    run_spec.sampling = true;
+    run_spec.sampling = false;
     run_spec.verbose = false;
     run_spec.restricted = true;
     run_spec.num_samples = 100;

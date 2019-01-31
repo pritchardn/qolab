@@ -100,7 +100,8 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimisation_spec_t
     dsecnd();
 
     //Initialise UC
-    meta_spec.uc = mkl_malloc((size_t)pow(2, meta_spec.machine_spec->num_qubits) * sizeof(MKL_Complex16), DEF_ALIGNMENT);
+    meta_spec.uc = mkl_calloc((size_t) pow(2, meta_spec.machine_spec->num_qubits), sizeof(MKL_Complex16),
+                              DEF_ALIGNMENT);
     meta_spec.qaoa_statistics->startTimes[0] = dsecnd();
     meta_spec.qaoa_statistics->startTimes[1] = dsecnd();
     generate_uc(&meta_spec, Cx);
