@@ -12,7 +12,7 @@ void extract_hamiltonian_double(MKL_Complex16 *uc, double *hamiltonian, MKL_INT 
 
 void initialise_state(MKL_Complex16 *state, machine_spec_t *mach_spec) {
     MKL_Complex16 init_value;
-    init_value.real = 1/sqrt(mach_spec->space_dimension);
+    init_value.real = 1.0 / sqrt(mach_spec->space_dimension);
     for(MKL_INT i = 0; i < mach_spec->space_dimension; ++i){
         state[i].real = init_value.real;
     }
@@ -21,13 +21,16 @@ void initialise_state(MKL_Complex16 *state, machine_spec_t *mach_spec) {
 void compute_probabilities(MKL_Complex16 * state, qaoa_data_t *meta_spec, double *output){
     MKL_Complex16 *z_probabilities = mkl_malloc(meta_spec->machine_spec->space_dimension * sizeof(MKL_Complex16), DEF_ALIGNMENT);
     check_alloc(z_probabilities);
-    //TODO: Unit test for normalisation
-    //double result = 0.0;
-    //cblas_zdotc_sub(space_dimension, state, 1, state, 1, &result);
-    //printf("%f\n", result);
     vzMulByConj(meta_spec->machine_spec->space_dimension, state, state, z_probabilities);
     vzAbs(meta_spec->machine_spec->space_dimension, z_probabilities, output);
     mkl_free(z_probabilities);
+}
+
+void check_probabilities(MKL_Complex16 *state, qaoa_data_t *meta_spec) {
+    //TODO: Unit test for normalisation
+    double result = 0.0;
+    cblas_zdotc_sub(meta_spec->machine_spec->space_dimension, state, 1, state, 1, &result);
+    printf("%f\n", result);
 }
 
 double expectation_value(MKL_Complex16 *state, qaoa_data_t *meta_spec){
