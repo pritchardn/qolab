@@ -104,7 +104,7 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimisation_spec_t
                               DEF_ALIGNMENT);
     meta_spec.qaoa_statistics->startTimes[0] = dsecnd();
     meta_spec.qaoa_statistics->startTimes[1] = dsecnd();
-    generate_uc(&meta_spec, Cx);
+    generate_uc(&meta_spec, Cx, mask);
     meta_spec.qaoa_statistics->endTimes[1] = dsecnd();
     if (meta_spec.run_spec->verbose) {
         printf("UC Created\n");
