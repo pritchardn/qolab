@@ -2,10 +2,12 @@
 // Created by nicholas on 28/06/18.
 //
 
+#include <time.h>
 #include "graph_utils.h"
 #include "globals.h"
 
 void random_doubles(int num_request, double *buffer) {
+    srand((unsigned) time(0));
     for (int i = 0; i < num_request; ++i) {
         buffer[i] = rand() / (double) RAND_MAX;
     }
