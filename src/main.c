@@ -39,6 +39,7 @@ int main(int argc, char *argv[]){
     cost_data.num_vertices = mach_spec.num_qubits;
     cost_data.graph = mkl_malloc(sizeof(MKL_INT) * mach_spec.num_qubits * mach_spec.num_qubits, DEF_ALIGNMENT);
     generate_graph(cost_data.graph, mach_spec.num_qubits, 0.5);
+    print_graph(&cost_data, stdout);
     qaoa(&mach_spec, &cost_data, &opt_spec, &run_spec);
     mkl_free(cost_data.graph);
     return 0;
