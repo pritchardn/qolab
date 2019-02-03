@@ -12,14 +12,14 @@ void random_doubles(int num_request, double *buffer) {
     }
 }
 
-void print_graph(cost_data_t *cost_data){
+void print_graph(cost_data_t *cost_data, FILE *out){
     int graph_size = (int)cost_data->num_vertices;
     for (int i = 0; i < graph_size; ++i) {
         for (int j = 0; j < graph_size; ++j) {
-            printf("%lld ", cost_data->graph[graph_size*i + j]);
+            fprintf(out, "%lld ", cost_data->graph[graph_size*i + j]);
         }
-        printf("\n");
-    }printf("\n");
+        fprintf(out, "\n");
+    }fprintf(out, "\n");
 }
 
 /**
