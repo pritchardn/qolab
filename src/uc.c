@@ -1,6 +1,7 @@
 #include "uc.h"
 
-void generate_uc(qaoa_data_t *meta_data, int (*Cx)(int, int, cost_data_t *)) {
+void generate_uc(qaoa_data_t *meta_data, int (*Cx)(int, int, cost_data_t *),
+                 bool (*mask)(unsigned int, cost_data_t *cost_data)) {
     int current, i, num_qubits;
     num_qubits = meta_data->machine_spec->num_qubits;
     double c_sum = 0.0, classic_prob;
@@ -10,7 +11,7 @@ void generate_uc(qaoa_data_t *meta_data, int (*Cx)(int, int, cost_data_t *)) {
     for (i = 0; i < meta_data->machine_spec->space_dimension; ++i) {
         current = Cx(i, num_qubits, meta_data->cost_data);
         //current = 0;
-        if (current > meta_data->qaoa_statistics->max_value) {
+        if (current > meta_data->qaoa_statistics->max_value && mask((unsigned) i, meta_data->cost_data)) {
             meta_data->qaoa_statistics->max_value = current;
             meta_data->qaoa_statistics->max_index = i;
         }
