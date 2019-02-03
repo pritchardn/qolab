@@ -4,13 +4,22 @@
 
 #include <time.h>
 #include "graph_utils.h"
-#include "globals.h"
 
 void random_doubles(int num_request, double *buffer) {
     srand((unsigned) time(0));
     for (int i = 0; i < num_request; ++i) {
         buffer[i] = rand() / (double) RAND_MAX;
     }
+}
+
+void print_graph(cost_data_t *cost_data){
+    int graph_size = (int)cost_data->num_vertices;
+    for (int i = 0; i < graph_size; ++i) {
+        for (int j = 0; j < graph_size; ++j) {
+            printf("%lld ", cost_data->graph[graph_size*i + j]);
+        }
+        printf("\n");
+    }printf("\n");
 }
 
 /**
