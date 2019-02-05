@@ -49,17 +49,17 @@ void timing_report(qaoa_statistics_t *statistics, FILE *outfile){
 void result_report(qaoa_statistics_t *statistics, FILE *outfile){
     fprintf(outfile, "Result report:\n"
                      "%d %d gOpt, Loc\n"
-                     "%f Final Result\n"
-                     "%f Best Result\n"
+                     "%f Final Expectation\n"
+                     "%f %f Best Result, Probability\n"
                      "%f Classical Exp\n"
                      "%f Initial Exp\n"
                      "%d Termination value\n",
-                     statistics->max_value, statistics->max_index,
-                     statistics->result,
-                     statistics->best_result,
-                     statistics->classical_exp,
-                     statistics->random_exp,
-                     statistics->term_status);
+            statistics->max_value, statistics->max_index,
+            statistics->result,
+            statistics->best_result, statistics->best_result_prob,
+            statistics->classical_exp,
+            statistics->random_exp,
+            statistics->term_status);
 }
 
 void optimiser_report(optimisation_spec_t *opt_spec, int P, FILE *outfile){
