@@ -71,9 +71,9 @@ void optimiser_initialise(qaoa_data_t *meta_spec){
         meta_spec->opt_spec->upper_bounds[meta_spec->machine_spec->P] = 2 * (double) PI;
         meta_spec->opt_spec->lower_bounds[meta_spec->machine_spec->P] = 0.0;
         meta_spec->opt_spec->parameters[meta_spec->machine_spec->P] = (double) PI / 2.0;
-        nlopt_set_max_objective(meta_spec->opt_spec->optimiser, (nlopt_func) evolve, (void *) meta_spec);
-    } else {
         nlopt_set_max_objective(meta_spec->opt_spec->optimiser, (nlopt_func) evolve_restricted, (void *) meta_spec);
+    } else {
+        nlopt_set_max_objective(meta_spec->opt_spec->optimiser, (nlopt_func) evolve, (void *) meta_spec);
     }
     nlopt_set_lower_bounds(meta_spec->opt_spec->optimiser, meta_spec->opt_spec->lower_bounds);
     nlopt_set_upper_bounds(meta_spec->opt_spec->optimiser, meta_spec->opt_spec->upper_bounds);
@@ -86,7 +86,9 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimisation_spec_t
     qaoa_data_t meta_spec;
     qaoa_statistics_t statistics;
     statistics.num_evals = 0;
+    statistics.best_expectation = -INFINITY;
     statistics.best_result = -INFINITY;
+    statistics.best_result_prob = -INFINITY;
     meta_spec.qaoa_statistics = &statistics;
     meta_spec.machine_spec = mach_spec;
     meta_spec.run_spec = run_spec;

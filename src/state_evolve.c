@@ -157,6 +157,16 @@ double perform_sampling(MKL_Complex16 *state, qaoa_data_t *meta_spec) {
     }
 
     weighted_choice(choice_values, cumul_probs, nnz, meta_spec->run_spec, choices);
+
+    size_t index = cblas_idamax(meta_spec->cost_data->cx_range, sum_probs, 1);
+    best = choice_values[index];
+    if (best >= meta_spec->qaoa_statistics->best_result) {
+        meta_spec->qaoa_statistics->best_result = best;
+        if (sum_probs[index] > meta_spec->qaoa_statistics->best_result_prob) {
+            meta_spec->qaoa_statistics->best_result_prob = sum_probs[index];
+        }
+    }
+
     best = choices[cblas_idamax(meta_spec->run_spec->num_samples, choices, 1)];
     if (best > meta_spec->qaoa_statistics->best_result) {
         meta_spec->qaoa_statistics->best_result = best;
@@ -189,12 +199,13 @@ double evolve(unsigned num_params, const double *x, double *grad, qaoa_data_t *m
         result = perform_sampling(state, meta_spec);
     } else {
         result = expectation_value(state, meta_spec);
+        perform_sampling(state, meta_spec);
     }
     //teardown
     mkl_free(state);
     //Return single value;
-    if(result > meta_spec->qaoa_statistics->best_result){
-        meta_spec->qaoa_statistics->best_result = result;
+    if (result > meta_spec->qaoa_statistics->best_expectation) {
+        meta_spec->qaoa_statistics->best_expectation = result;
     }
     if (meta_spec->run_spec->verbose) {
         printf("%d \n", meta_spec->qaoa_statistics->num_evals);
@@ -229,12 +240,13 @@ double evolve_restricted(unsigned num_params, const double *x, double *grad, qao
         result = perform_sampling(state, meta_spec);
     } else {
         result = expectation_value(state, meta_spec);
+        perform_sampling(state, meta_spec);
     }
     //teardown
     mkl_free(state);
     //Return single value;
-    if (result > meta_spec->qaoa_statistics->best_result) {
-        meta_spec->qaoa_statistics->best_result = result;
+    if (result > meta_spec->qaoa_statistics->best_expectation) {
+        meta_spec->qaoa_statistics->best_expectation = result;
     }
     if (meta_spec->run_spec->verbose) {
         printf("%d \n", meta_spec->qaoa_statistics->num_evals);
