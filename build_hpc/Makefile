@@ -1,9 +1,9 @@
-# the compiler: gcc for C program, define as g++ for C++
+# the compiler:
 CC = icc
 
-# compiler flags:
-CFLAGS = -std=c99 -DMKL_ILP64 -O3 -I${MKLROOT}/include -fopenmp -Wall -Werror
-LINKERS =  -Wl, -mkl=parallel -liomp5 -lpthread -lnlopt -lm -ldl
+# compiler flags: assumes nlopt is installed locally under $HOME/install
+CFLAGS = -std=c99 -DMKL_ILP64 -O3 -I${HOME}/install/include -fopenmp -Wall
+LINKERS =  -mkl=parallel -liomp5 -lpthread -lm -ldl -L${HOME}/install/lib64 -lnlopt
 # the build target executable:
 TARGET = ../bin/qaoa.exe
 LOC = ../src
