@@ -5,7 +5,7 @@ MAALI_NLOPT_HOME = /group/pawsey0309/npritchard/software/cle60up05/apps/PrgEnv-i
 
 # compiler flags: assumes nlopt is installed locally under $HOME/install
 CFLAGS = -std=c99 -DMKL_ILP64 -mkl=parallel -O3 -I$(MAALI_NLOPT_HOME)/include -Wall 
-LINKERS =  -liomp5 -lpthread -lnlopt 
+LINKERS =  -liomp5 -lpthread -L$(MAALI_NLOPT_HOME)/lib64 -lnlopt
 
 # the build target executable:
 TARGET = ../bin/qaoa.exe
