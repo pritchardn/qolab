@@ -1,9 +1,12 @@
 # the compiler:
-CC = icc
+CC = cc
+
+MAALI_NLOPT_HOME = /group/pawsey0309/npritchard/software/cle60up05/apps/PrgEnv-intel/6.0.4/intel/17.0.4.196/haswell/nlopt/2.5.0
 
 # compiler flags: assumes nlopt is installed locally under $HOME/install
-CFLAGS = -std=c99 -DMKL_ILP64 -O3 -I${HOME}/install/include -fopenmp -Wall
-LINKERS =  -mkl=parallel -liomp5 -lpthread -lm -ldl -L${HOME}/install/lib64 -lnlopt
+CFLAGS = -std=c99 -DMKL_ILP64 -mkl=parallel -O3 -I$(MAALI_NLOPT_HOME)/include -Wall 
+LINKERS =  -liomp5 -lpthread -lnlopt 
+
 # the build target executable:
 TARGET = ../bin/qaoa.exe
 LOC = ../src
@@ -11,7 +14,7 @@ SRCS = $(LOC)/main.c $(LOC)/qaoa.c $(LOC)/ub.c $(LOC)/globals.c $(LOC)/uc.c $(LO
 HEADERS = $(LOC)/qaoa.h $(LOC)/ub.h $(LOC)/globals.h $(LOC)/uc.h $(LOC)/problem_code.h $(LOC)/state_evolve.h $(LOC)/reporting.h $(LOC)/matrix_expm.h $(LOC)/graph_utils.h
 
 build: $(SRCS)
-	$(CC) $(CFLAGS) -o $(TARGET) $(SRCS) $(HEADERS) $(LINKERS)
+	$(CC) $(CFLAGS) $(LINKERS) -o $(TARGET) $(SRCS) $(HEADERS) 
 
 clean:
 	rm -f *.o
