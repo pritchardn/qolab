@@ -7,6 +7,8 @@ void timing_report(qaoa_statistics_t *statistics, FILE *outfile);
 void result_report(qaoa_statistics_t *statistics, FILE *outfile);
 void optimiser_report(optimisation_spec_t *opt_spec, int P, FILE *outfile);
 
+void nlopt_termination_parser(nlopt_result nlopt_code, FILE *outfile);
+
 void iteration_report(qaoa_data_t *meta_spec);
 
 void final_report(qaoa_data_t *meta_spec);
