@@ -52,14 +52,13 @@ void result_report(qaoa_statistics_t *statistics, FILE *outfile){
                      "%f Final Expectation\n"
                      "%f %f Best Result, Probability\n"
                      "%f Classical Exp\n"
-                     "%f Initial Exp\n"
-                     "%d Termination value\n",
+                     "%f Initial Exp\n",
             statistics->max_value, statistics->max_index,
             statistics->result,
             statistics->best_result, statistics->best_result_prob,
             statistics->classical_exp,
-            statistics->random_exp,
-            statistics->term_status);
+            statistics->random_exp);
+    nlopt_termination_parser(statistics->term_status, outfile);
 }
 
 void optimiser_report(optimisation_spec_t *opt_spec, int P, FILE *outfile){
