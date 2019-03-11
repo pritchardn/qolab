@@ -101,3 +101,44 @@ void final_report(qaoa_data_t *meta_spec){
         fclose(meta_spec->run_spec->outfile);
     }
 }
+
+void nlopt_termination_parser(nlopt_result nlopt_code, FILE *outfile) {
+    switch (nlopt_code) {
+        case NLOPT_SUCCESS:
+            fprintf(outfile, "1 nlopt_success\n");
+            break;
+        case NLOPT_STOPVAL_REACHED:
+            fprintf(outfile, "2 nlopt_stopval_reached\n");
+            break;
+        case NLOPT_FTOL_REACHED:
+            fprintf(outfile, "3 nlopt_ftol_reached\n");
+            break;
+        case NLOPT_XTOL_REACHED:
+            fprintf(outfile, "4 nlopt_xtol_reached\n");
+            break;
+        case NLOPT_MAXEVAL_REACHED:
+            fprintf(outfile, "5 nlopt_maxeval_reached\n");
+            break;
+        case NLOPT_MAXTIME_REACHED:
+            fprintf(outfile, "6 nlopt_maxtime_reached\n");
+            break;
+        case NLOPT_FAILURE:
+            fprintf(outfile, "-1 nlopt_failure\n");
+            break;
+        case NLOPT_INVALID_ARGS:
+            fprintf(outfile, "-2 nlopt_invalid_args\n");
+            break;
+        case NLOPT_OUT_OF_MEMORY:
+            fprintf(outfile, "-3 nlopt_out_of_memory\n");
+            break;
+        case NLOPT_ROUNDOFF_LIMITED:
+            fprintf(outfile, "-4 nlopt_roundoff_limited\n");
+            break;
+        case NLOPT_FORCED_STOP:
+            fprintf(outfile, "-5 nlopt_forced_stop\n");
+            break;
+        default:
+            fprintf(outfile, "%d nlopt_other\n", nlopt_code);
+            break;
+    }
+}
