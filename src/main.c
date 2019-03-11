@@ -7,6 +7,20 @@
 #include "graph_utils.h"
 #include <mathimf.h>
 
+void init_graph(int num_qubits, cost_data_t *cost_data) {
+    int i, j;
+    cost_data->graph = mkl_calloc((size_t) num_qubits * num_qubits, sizeof(MKL_INT), DEF_ALIGNMENT);
+    check_alloc(cost_data->graph);
+    for (i = 0; i < num_qubits - 1; ++i) {
+        j = i + 1;
+        cost_data->graph[i * num_qubits + j] = 1;
+        cost_data->graph[j * num_qubits + i] = 1;
+    }
+    cost_data->graph[num_qubits - 1] = 1;
+    cost_data->graph[(num_qubits - 1) * num_qubits] = 1;
+    print_graph(cost_data, stdout);
+}
+
 /*
  * An example main file which runs our example solution
  * All parameters which must be specified are in this example.
@@ -38,8 +52,7 @@ int main(int argc, char *argv[]){
     cost_data.x_range = mach_spec.space_dimension;
     cost_data.num_vertices = mach_spec.num_qubits;
     cost_data.graph = mkl_malloc(sizeof(MKL_INT) * mach_spec.num_qubits * mach_spec.num_qubits, DEF_ALIGNMENT);
-    generate_graph(cost_data.graph, mach_spec.num_qubits, 0.5);
-    print_graph(&cost_data, stdout);
+    init_graph(mach_spec.num_qubits, &cost_data);
     qaoa(&mach_spec, &cost_data, &opt_spec, &run_spec);
     mkl_free(cost_data.graph);
     return 0;
