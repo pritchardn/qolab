@@ -1,3 +1,8 @@
+/**
+ * @author Nicholas Pritchard
+ * @date 1/07/18
+ */
+
 #ifndef QOLAB_REPORTING_H
 #define QOLAB_REPORTING_H
 #include "globals.h"

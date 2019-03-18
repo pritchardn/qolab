@@ -1,3 +1,8 @@
+/**
+ * @author Nicholas Pritchard
+ * @date 1/07/18
+ */
+
 #include <mkl.h>
 #include <stdbool.h>
 #include <time.h>

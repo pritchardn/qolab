@@ -1,3 +1,7 @@
+/**
+ * @author Nicholas Pritchard
+ * @date 28/06/2018
+ */
 #ifndef GRAPHSIMILARITY_GLOBALS_H
 #define GRAPHSIMILARITY_GLOBALS_H
 

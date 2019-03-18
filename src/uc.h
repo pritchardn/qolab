@@ -1,3 +1,8 @@
+/**
+ * @author Nicholas Pritchard
+ * @date 1/07/18
+ */
+
 #ifndef GRAPHSIMILARITY_UC_H
 #define GRAPHSIMILARITY_UC_H
 

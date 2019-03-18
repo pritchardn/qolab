@@ -1,6 +1,7 @@
-//
-// Created by nicholas on 28/06/18.
-//
+/**
+ * @author Nicholas Pritchard
+ * @date 28/06/2018
+ */
 
 #ifndef GRAPHSIMILARITY_GRAPHUTIL_H
 #define GRAPHSIMILARITY_GRAPHUTIL_H

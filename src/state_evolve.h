@@ -1,3 +1,8 @@
+/**
+ * @author Nicholas Pritchard
+ * @date 1/07/18
+ */
+
 #ifndef QOLAB_STATE_EVOLVE_H
 #define QOLAB_STATE_EVOLVE_H
 #include "globals.h"

@@ -1,3 +1,8 @@
+/**
+ * @author Nicholas Pritchard
+ * @date 1/07/18
+ */
+
 #ifndef QOLAB_PROBLEM_CODE_H
 #define QOLAB_PROBLEM_CODE_H
 
