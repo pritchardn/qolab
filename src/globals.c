@@ -1,7 +1,7 @@
 #include "globals.h"
 
 /**
- * Helper function which returns the factorial of an int.
+ * @brief Helper function which returns the factorial of an int.
  * TODO: Unit test for overflow
  * @param n The integer have the factorial computed on
  * @return MKL_INT The factorial of n
@@ -22,7 +22,7 @@ MKL_INT factorial(int n) {
 }
 
 /**
- * Helper function to check the validity of a pointer and failes gracefully
+ * @brief Helper function to check the validity of a pointer and failes gracefully
  * @param pointer The memory to be checked
  */
 void check_alloc(void *pointer) {
@@ -33,9 +33,8 @@ void check_alloc(void *pointer) {
 }
 
 /**
- * A custom mkl error code parser.
- *
- * Checks for a variety of possible errors and exits gracefully:
+ * @brief A custom mkl error code parser.
+ * @details Checks for a variety of possible errors and exits gracefully:
  *   - SUCCESS
  *   - NOT INITIALISED
  *   - ALLOC FAILED
