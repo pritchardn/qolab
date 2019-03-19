@@ -8,9 +8,10 @@
 
 #include <mkl.h>
 #include <stdbool.h>
+
 /**
- * A struct which contains additional information for the cost function to work
- * x_range and cx_range must both be included for all cases.
+ * @brief A struct which contains additional information for the cost function to work
+ * @warning x_range and cx_range must both be included for all cases.
  */
 typedef struct {
     MKL_INT x_range;    // The upper bound of cost-function input values.
