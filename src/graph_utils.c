@@ -41,7 +41,7 @@ void print_graph(cost_data_t *cost_data, FILE *out){
  * known limitations of system rand.
  * @param graph1  Assumed to be of graph_size * graph_size in length
  * @param graph2  Assumed to be of graph_size * graph_size in length
- * @param graph_size
+ * @param graph_size The number of vertices required
  * @param prob  Defaults to 0.5
  */
 void generate_graph(MKL_INT *graph1, int graph_size, float prob) {
