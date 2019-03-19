@@ -59,4 +59,7 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimization_spec_t
  * \section contact_sec Contact
  * Do not hesitate to reach out report errors and suggest features
  *   - Github: https://github.com/pritchardn/qolab
+ *
+ * \section licensing Licence
+ * GPLv3
  */
