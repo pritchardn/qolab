@@ -61,7 +61,7 @@ void result_report(qaoa_statistics_t *statistics, FILE *outfile){
     nlopt_termination_parser(statistics->term_status, outfile);
 }
 
-void optimiser_report(optimisation_spec_t *opt_spec, int P, FILE *outfile){
+void optimiser_report(optimization_spec_t *opt_spec, int P, FILE *outfile) {
     fprintf(outfile, "Optimisation report\n"
                      "%d Method\n"
                      "%d Max evals\n"

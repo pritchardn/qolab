@@ -1,6 +1,6 @@
 /**
  * @author Nicholas Pritchard <21726929@student.uwa.edu.au>
- * The main driving code which actually runs the QAOA
+ * @brief The main driving code which actually runs the QAOA
  */
 #include "qaoa.h"
 #include "ub.h"
@@ -9,6 +9,10 @@
 #include "reporting.h"
 
 //TODO Unit test all of the these
+/**
+ * @brief Checks paramters in the meta-specification for validity
+ * @param meta_spec The data-structure containing all relevant fields
+ */
 void parameter_checking(qaoa_data_t *meta_spec) {
     //Check machine specification
     if (meta_spec->machine_spec->num_qubits <= 0) {
@@ -38,6 +42,10 @@ void parameter_checking(qaoa_data_t *meta_spec) {
 
 }
 
+/**
+ * @brief De-allocates all memory associated with a QAOA simulation
+ * @param meta_spec The data-structure containing all relevant fields
+ */
 void qaoa_teardown(qaoa_data_t *meta_spec){
     mkl_sparse_destroy(meta_spec->ub);
     mkl_free(meta_spec->uc);
@@ -47,7 +55,11 @@ void qaoa_teardown(qaoa_data_t *meta_spec){
 }
 
 //TODO: Include custom optimisation method (not nlopt)
-void optimiser_initialise(qaoa_data_t *meta_spec){
+/**
+ * @brief Initializes the nlopt optimisation data-structures with provided fields
+ * @param meta_spec The data-structure containing all fields
+ */
+void optimiser_Initialize(qaoa_data_t *meta_spec) {
     int num_params = 2 * meta_spec->machine_spec->P;
     if (meta_spec->run_spec->restricted) {
         num_params++;
@@ -82,7 +94,14 @@ void optimiser_initialise(qaoa_data_t *meta_spec){
     nlopt_set_maxeval(meta_spec->opt_spec->optimiser, meta_spec->opt_spec->max_evals);
 }
 
-void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimisation_spec_t *opt_spec, run_spec_t *run_spec){
+/**
+ * @brief The main method which performs a QAOA simulation
+ * @param mach_spec Contains the specification of the hypothetial quantum machine
+ * @param cost_data Contains information about the cost_function
+ * @param opt_spec Contains specification of the classical optimization routine
+ * @param run_spec Contains specifcation of the type of simulation to be run
+ */
+void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimization_spec_t *opt_spec, run_spec_t *run_spec) {
     qaoa_data_t meta_spec;
     qaoa_statistics_t statistics;
     statistics.num_evals = 0;
@@ -118,7 +137,7 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimisation_spec_t
     if (meta_spec.run_spec->verbose) {
         printf("UB Created\n");
     }
-    optimiser_initialise(&meta_spec);
+    optimiser_Initialize(&meta_spec);
     meta_spec.qaoa_statistics->startTimes[3] = dsecnd();
     meta_spec.qaoa_statistics->term_status = nlopt_optimize(meta_spec.opt_spec->optimiser, opt_spec->parameters, &meta_spec.qaoa_statistics->result);
     meta_spec.qaoa_statistics->endTimes[3] = dsecnd();

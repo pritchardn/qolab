@@ -27,7 +27,7 @@ int main(int argc, char *argv[]){
     mach_spec.P = 1;
     mach_spec.space_dimension = (MKL_INT)pow(2, mach_spec.num_qubits);
 
-    optimisation_spec_t opt_spec;
+    optimization_spec_t opt_spec;
     opt_spec.ftol = 1e-16;
     opt_spec.xtol = 1e-16;
     opt_spec.nlopt_method = NLOPT_LN_NELDERMEAD;

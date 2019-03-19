@@ -67,7 +67,7 @@ typedef struct {
     double *upper_bounds;   /**< The upper bounds for the parameters */
     nlopt_opt optimiser;    /**< The actual optimiser object */
     //nlopt_opt local_opt;  //TODO: Support for hybrid multi-optimiser (e.g. MLSL)
-} optimisation_spec_t;
+} optimization_spec_t;
 
 /*! A meta-structure which contains the information about the entire run
  *
@@ -79,7 +79,7 @@ typedef struct{
     sparse_matrix_t ub;                 /**< The data structure containing the driver hamiltonian */
     MKL_Complex16 *uc;                  /**< The data structure containing the cost function */
     qaoa_statistics_t *qaoa_statistics; /**< Contains run-time statistics */
-    optimisation_spec_t *opt_spec;      /**< Specifies the classical optimisation scheme */
+    optimization_spec_t *opt_spec;      /**< Specifies the classical optimisation scheme */
 } qaoa_data_t;
 
 #endif
