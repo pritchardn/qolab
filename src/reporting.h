@@ -15,7 +15,7 @@ void optimiser_report(optimization_spec_t *opt_spec, int P, FILE *outfile);
 
 void nlopt_termination_parser(nlopt_result nlopt_code, FILE *outfile);
 
-void iteration_report(qaoa_data_t *meta_spec);
+void iteration_report(qaoa_data_t *meta_spec); //TODO Implement iteration report
 
 void final_report(qaoa_data_t *meta_spec);
 
