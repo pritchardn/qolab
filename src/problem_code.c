@@ -1,3 +1,7 @@
+/**
+ * @author Nicholas Pritchard
+ * @date 1/12/18
+ */
 #include "problem_code.h"
 
 /**
