@@ -2,8 +2,8 @@
 #include "globals.h"
 
 /**
- * Computes action of the matrix exponential of a diagonal matrix applied to a vector.
- * This requires the matrix is represented as a vector of complex numbers.
+ * @brief Computes action of the matrix exponential of a diagonal matrix applied to a vector.
+ * @details This requires the matrix is represented as a vector of complex numbers.
  * @param diag The 'matrix' to be exponentiated
  * @param alpha A scaling factor
  * @param nnz The size of the matrix
@@ -29,8 +29,8 @@ void spmatrix_expm_z_diag(const MKL_Complex16 *diag, double alpha, MKL_INT nnz, 
 }
 
 /**
- * Computes the action of the matrix exponential of a general matrix applied to a vector.
- * Requires the minimal and maximal eigenvalue of the matrix to be passed beforehand.
+ * @brief Computes the action of the matrix exponential of a general matrix applied to a vector.
+ * @details Requires the minimal and maximal eigenvalue of the matrix to be passed beforehand.
  * Makes use of a Chebyshev polynomial expansion method.
  * @param matrix The MKl sparse matrix to be exponentiated
  * @param state The vector to which the action is applied
