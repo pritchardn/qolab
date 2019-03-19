@@ -1,5 +1,17 @@
+/**
+ * @author Nicholas Pritchard
+ * @date 1/07/2018
+ */
 #include "ub.h"
 
+/**
+ * @brief Generates the driver hamiltonian for a given problem.
+ * @details Defines the continuous time quantum walk that allows for 'probability' to flow around candidate solution bitstrings
+ * In the standard QAOA this defines a fully connected hyper-cube, in a restricted QAOA this is a problem dependent
+ * subset of this graph
+ * @param meta_data Describes the full simulation. num_qubits, cost_data are used
+ * @param mask (optional) Returns true given a valid input, false otherwise.
+ */
 void generate_ub(qaoa_data_t *meta_data, bool (*mask)(unsigned int, cost_data_t *cost_data)) {
     sparse_status_t status;
     int num_qubits = meta_data->machine_spec->num_qubits;

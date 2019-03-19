@@ -1,10 +1,11 @@
 #include "globals.h"
 
 /**
- * Helper function which returns the factorial of an int.
+ * @brief Helper function which returns the factorial of an int.
  * TODO: Unit test for overflow
- * @param n
- * @return MKL_INT (long long int)
+ * @param n The integer have the factorial computed on
+ * @return MKL_INT The factorial of n
+ * @warning This is prone to overflow
  */
 MKL_INT factorial(int n) {
     MKL_INT result = 0;
@@ -21,19 +22,27 @@ MKL_INT factorial(int n) {
 }
 
 /**
- * Helper function to check the validity of a pointer and failes gracefully
- * @param pointer
+ * @brief Helper function to check the validity of a pointer and failes gracefully
+ * @param pointer The memory to be checked
  */
 void check_alloc(void *pointer) {
     if (pointer == NULL) {
-        fprintf(stderr, "Alloc fail\n");
+        fprintf(stderr, "Allocation fail\n");
         exit(EXIT_FAILURE);
     }
 }
 
 /**
- * A custom mkl error code parser
- * @param error_code
+ * @brief A custom mkl error code parser.
+ * @details Checks for a variety of possible errors and exits gracefully:
+ *   - SUCCESS
+ *   - NOT INITIALISED
+ *   - ALLOC FAILED
+ *   - INVALID VALUE
+ *   - EXEC_FAILED
+ *   - INTERNAL ERROR
+ *   - NOT SUPPORTED
+ * @param error_code The MKL error flag to be processed
  * @param stream The specified stream to send debug messages to
  * TODO: Test for file, stream and NULL
  */

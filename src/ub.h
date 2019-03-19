@@ -1,6 +1,7 @@
-//
-// Created by nicholas on 1/07/18.
-//
+/**
+ * @author Nicholas Pritchard
+ * @date 1/07/18
+ */
 
 #ifndef GRAPHSIMILARITY_UB_H
 #define GRAPHSIMILARITY_UB_H

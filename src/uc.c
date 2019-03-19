@@ -1,5 +1,13 @@
 #include "uc.h"
 
+/**
+ * @brief Generates the solution hamiltonian which encodes the problem dependent solutions to every possible bit-string.
+ * @param meta_data Contains all the information about our simulation
+ * @param Cx The function which implements the problem-dependent cost-function
+ * @param mask (Optional) A bit-string mask (the same as UB-generation) to avoid computing the cost-function for
+ * invalid candidate solutions in the restricted QAOA.
+ * @warning Will probably hit double precision for the c_sum statistic very quickly
+ */
 void generate_uc(qaoa_data_t *meta_data, int (*Cx)(int, int, cost_data_t *),
                  bool (*mask)(unsigned int, cost_data_t *cost_data)) {
     int current, i, num_qubits;
