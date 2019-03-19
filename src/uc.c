@@ -1,7 +1,7 @@
 #include "uc.h"
 
 /**
- * \brief Generates the solution hamiltonian which encodes the problem dependent solutions to every possible bit-string.
+ * @brief Generates the solution hamiltonian which encodes the problem dependent solutions to every possible bit-string.
  * @param meta_data Contains all the information about our simulation
  * @param Cx The function which implements the problem-dependent cost-function
  * @param mask (Optional) A bit-string mask (the same as UB-generation) to avoid computing the cost-function for
