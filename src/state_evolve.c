@@ -91,8 +91,8 @@ double evolve(unsigned num_params, const double *x, double *grad, qaoa_data_t *m
     //teardown
     mkl_free(state);
     //Return single value;
-    if (result > meta_spec->qaoa_statistics->best_expectation) {
-        meta_spec->qaoa_statistics->best_expectation = result;
+    if (result > meta_spec->qaoa_statistics->best_measurement) {
+        meta_spec->qaoa_statistics->best_measurement = result;
     }
     if (meta_spec->run_spec->verbose) {
         printf("%d \n", meta_spec->qaoa_statistics->num_evals);
@@ -138,8 +138,8 @@ double evolve_restricted(unsigned num_params, const double *x, double *grad, qao
     //teardown
     mkl_free(state);
     //Return single value;
-    if (result > meta_spec->qaoa_statistics->best_expectation) {
-        meta_spec->qaoa_statistics->best_expectation = result;
+    if (result > meta_spec->qaoa_statistics->best_measurement) {
+        meta_spec->qaoa_statistics->best_measurement = result;
     }
     if (meta_spec->run_spec->verbose) {
         printf("%d \n", meta_spec->qaoa_statistics->num_evals);

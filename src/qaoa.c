@@ -105,7 +105,7 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimization_spec_t
     qaoa_data_t meta_spec;
     qaoa_statistics_t statistics;
     statistics.num_evals = 0;
-    statistics.best_expectation = -INFINITY;
+    statistics.best_measurement = -INFINITY;
     statistics.best_result = -INFINITY;
     statistics.best_result_prob = -INFINITY;
     meta_spec.qaoa_statistics = &statistics;
