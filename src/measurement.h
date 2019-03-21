@@ -9,7 +9,7 @@
 #include <mkl.h>
 #include "globals.h"
 
-double sample(double *probabilities, qaoa_data_t *meta_data);
+double sample(double *probabilities, qaoa_data_t *meta_spec);
 
 double expectation_value(double *probabilities, qaoa_data_t *meta_data);
 
