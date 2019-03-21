@@ -75,12 +75,12 @@ void result_report(qaoa_statistics_t *statistics, FILE *outfile){
     fprintf(outfile, "Result report:\n"
                      "%d %d gOpt, Loc\n"
                      "%f Final Expectation\n"
-                     "%f %f Best Result, Probability\n"
+                     "%d Best Measurement\n"
                      "%f Classical Exp\n"
                      "%f Initial Exp\n",
             statistics->max_value, statistics->max_index,
             statistics->result,
-            statistics->best_result, statistics->best_result_prob,
+            (int) statistics->best_measurement,
             statistics->classical_exp,
             statistics->random_exp);
     nlopt_termination_parser(statistics->term_status, outfile);
