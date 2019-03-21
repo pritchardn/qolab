@@ -119,6 +119,7 @@ double evolve_restricted(unsigned num_params, const double *x, double *grad, qao
                                       DEF_ALIGNMENT);
     check_alloc(state);
     initialise_state(state, meta_spec->machine_spec);
+    check_probabilities(state, meta_spec);
     //Apply our QAOA generation
     for (int i = 0; i < (num_params - 1) / 2; ++i) {
         spmatrix_expm_cheby(&meta_spec->ub, state, (MKL_Complex16) {x[i + P], 0.0},
