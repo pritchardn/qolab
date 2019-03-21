@@ -47,6 +47,18 @@ void extract_hamiltonian_double(MKL_Complex16 *uc, double *hamiltonian, MKL_INT 
     }
 }
 
+/**
+ * @brief Takes a set of probabilites and values where values can hold multiple entries in both arrays and compacts
+ * this into two smaller arrays representing the outright probability of each discrete value
+ * @param probabilities The probabilities to be compacted
+ * @param hamiltonian The values the probabilities correspond to
+ * @param values The buffer to hold the resuting compacted values
+ * @param prob_compact The buffer to hold the resulting compacted probabilities
+ * @param meta_data Contains extra simulation data like the largest expected value to encounter
+ * @warning The length of values and prob_compact are not checked and need to be large enough to hold all discrete
+ * values present
+ * @return The number of distinct values present
+ */
 MKL_INT compact_probabilities(const double *probabilities, const double *hamiltonian, MKL_INT *values,
                               double *prob_compact, qaoa_data_t *meta_data) {
     MKL_INT nnz = 0;
@@ -76,6 +88,12 @@ MKL_INT compact_probabilities(const double *probabilities, const double *hamilto
     return nnz;
 }
 
+/**
+ * @brief Creates a cumulative probability sum array from a probability array
+ * @param probabilities The probabilities to be accumulated
+ * @param cumul_probs The buffer to hold the resulting cumulative sum array
+ * @param nnz The number of elements in the array
+ */
 void cumulate_probabilities(const double *probabilities, double *cumul_probs, MKL_INT nnz) {
     cumul_probs[0] = probabilities[0];
     for (int i = 0; i < nnz; ++i) {
@@ -83,12 +101,21 @@ void cumulate_probabilities(const double *probabilities, double *cumul_probs, MK
     }
 }
 
-MKL_INT weighted_choices(const MKL_INT *vals, const double *weights, MKL_INT nnz, run_spec_t *run_spec,
+/**
+ * @brief Performs a set of weighted random choices from the vals array according to the probabilities in weights
+ * @param vals The values to be sampled
+ * @param weights The weightings of these values
+ * @param nnz The number of values present
+ * @param num_samples The number of samples to take
+ * @param result The buffer to hold the choices
+ * @return The sum of the choices made
+ */
+MKL_INT weighted_choices(const MKL_INT *vals, const double *weights, MKL_INT nnz, int num_samples,
                          MKL_INT *result) {
     MKL_INT temp;
     MKL_INT sum = 0;
     double target;
-    for (int i = 0; i < run_spec->num_samples; ++i) {
+    for (int i = 0; i < num_samples; ++i) {
         target = rand() / (double) RAND_MAX;
         temp = binary_search(weights, target, nnz);
         result[i] = vals[temp];
@@ -98,9 +125,12 @@ MKL_INT weighted_choices(const MKL_INT *vals, const double *weights, MKL_INT nnz
 }
 
 /**
- * @brief Samples the provided probability distribution returning the best value sampled
- * @param probabilities
- * @param meta_spec
+ * @brief Samples the provided probability distribution returning an estimate of the expectation value
+ * @details Performs a weighted sum by first building a cumulative sum probability array.
+ * Then selects meta_spec->run_spec->num_samples. Expectation is the average of these samples, also tracks best
+ * individual measurement
+ * @param probabilities The probability array to be sampled.
+ * @param meta_spec Contains all simulation data including the problem hamiltonian and number of samples.
  * @return
  */
 double sample(double *probabilities, qaoa_data_t *meta_spec) {
@@ -135,9 +165,9 @@ double sample(double *probabilities, qaoa_data_t *meta_spec) {
     //Allocate samples
     samples = mkl_malloc(meta_spec->run_spec->num_samples * sizeof(MKL_INT), DEF_ALIGNMENT);
     //Perform weighted samples
-    sample_sum = weighted_choices(vals, cumul_probs, nnz, meta_spec->run_spec, samples);
-    expectation = (double) sample_sum / (double) meta_spec->run_spec->num_samples;
+    sample_sum = weighted_choices(vals, cumul_probs, nnz, meta_spec->run_spec->num_samples, samples);
     //Extract useful data
+    expectation = (double) sample_sum / (double) meta_spec->run_spec->num_samples; // Estimating expectation value
     best_sample = samples[cblas_idamax(meta_spec->run_spec->num_samples, (double *) samples, 1)];
 
     if (best_sample > meta_spec->qaoa_statistics->best_sample) {
