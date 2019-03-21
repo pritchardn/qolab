@@ -29,9 +29,8 @@ typedef struct {
     double result;              /**< The final (previous) function value */
     double classical_exp;       /**< The classical expectation value of random sampling of the cost function */
     double random_exp;          /**< Randomly sampling the entire QAOA domain (may be different to whole state-space) */
-    double best_expectation;    /**< The best expectation value found */
-    double best_result;         /**< The best cost-value found over the entire optimisation scheme */
-    double best_result_prob;    /**< The associated best probability with the best found result */
+    double best_sample;    /**< The best expectation value found */
+    double best_expectation;
     int max_value, max_index;   /**< The maximum value and index in the cost function generated */
     nlopt_result term_status;   /**< The nlopt termination status */
     int num_evals;              /**< The number of evaluations used by the optimiser */

@@ -314,7 +314,7 @@ void deform_rem_direct(const MKL_INT *src, MKL_INT *dest, int graph_size, int n)
 void deform_rem_undirect(const MKL_INT *src, MKL_INT *dest, int graph_size, int n) {
     int count;
     for (int i = 0; i < n; ++i) {
-        count = count_1(src, dest, graph_size) / 2;
+        count = count_1(src, graph_size) / 2;
         rem_edge_undirect(src, dest, graph_size, count);
     }
 }

@@ -10,8 +10,8 @@ LINKERS =  -liomp5 -lpthread -L$(MAALI_NLOPT_HOME)/lib64 -lnlopt
 # the build target executable:
 TARGET = ../bin/qaoa.exe
 LOC = ../src
-SRCS = $(LOC)/main.c $(LOC)/qaoa.c $(LOC)/ub.c $(LOC)/globals.c $(LOC)/uc.c $(LOC)/problem_code.c $(LOC)/state_evolve.c $(LOC)/reporting.c $(LOC)/matrix_expm.c $(LOC)/graph_utils.c
-HEADERS = $(LOC)/qaoa.h $(LOC)/ub.h $(LOC)/globals.h $(LOC)/uc.h $(LOC)/problem_code.h $(LOC)/state_evolve.h $(LOC)/reporting.h $(LOC)/matrix_expm.h $(LOC)/graph_utils.h
+SRCS = $(LOC)/main.c $(LOC)/qaoa.c $(LOC)/ub.c $(LOC)/globals.c $(LOC)/uc.c $(LOC)/problem_code.c $(LOC)/state_evolve.c $(LOC)/reporting.c $(LOC)/matrix_expm.c $(LOC)/graph_utils.c $(LOC)/measurement.c
+HEADERS = $(LOC)/qaoa.h $(LOC)/ub.h $(LOC)/globals.h $(LOC)/uc.h $(LOC)/problem_code.h $(LOC)/state_evolve.h $(LOC)/reporting.h $(LOC)/matrix_expm.h $(LOC)/graph_utils.h $(LOC)/measurement.h
 
 build: $(SRCS)
 	$(CC) $(CFLAGS) $(LINKERS) -o $(TARGET) $(SRCS) $(HEADERS) 
