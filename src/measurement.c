@@ -54,25 +54,25 @@ void extract_hamiltonian_double(MKL_Complex16 *uc, double *hamiltonian, MKL_INT 
  * @param hamiltonian The values the probabilities correspond to
  * @param values The buffer to hold the resuting compacted values
  * @param prob_compact The buffer to hold the resulting compacted probabilities
- * @param meta_data Contains extra simulation data like the largest expected value to encounter
+ * @param meta_spec Contains extra simulation data like the largest expected value to encounter
  * @warning The length of values and prob_compact are not checked and need to be large enough to hold all discrete
  * values present
  * @return The number of distinct values present
  */
 MKL_INT compact_probabilities(const double *probabilities, const double *hamiltonian, MKL_INT *values,
-                              double *prob_compact, qaoa_data_t *meta_data) {
-    MKL_INT nnz = 0;
+                              double *prob_compact, qaoa_data_t *meta_spec) {
     double *sum_vals;
     bool *set_flag;
+    MKL_INT nnz = 0;
 
-    size_t num_vals = (size_t) meta_data->cost_data->cx_range;
+    size_t num_vals = (size_t) meta_spec->cost_data->cx_range;
 
     sum_vals = mkl_calloc(num_vals, sizeof(double), DEF_ALIGNMENT);
     set_flag = mkl_calloc(num_vals, sizeof(bool), DEF_ALIGNMENT);
     check_alloc(sum_vals);
     check_alloc(set_flag);
 
-    for (MKL_INT i = 0; i < meta_data->machine_spec->space_dimension; ++i) {
+    for (MKL_INT i = 0; i < meta_spec->machine_spec->space_dimension; ++i) {
         if (!set_flag[(int) hamiltonian[i] - 1]) {
             values[nnz] = (MKL_INT) hamiltonian[i];
             set_flag[(MKL_INT) hamiltonian[i] - 1] = true;
@@ -96,7 +96,7 @@ MKL_INT compact_probabilities(const double *probabilities, const double *hamilto
  */
 void cumulate_probabilities(const double *probabilities, double *cumul_probs, MKL_INT nnz) {
     cumul_probs[0] = probabilities[0];
-    for (int i = 0; i < nnz; ++i) {
+    for (MKL_INT i = 0; i < nnz; ++i) {
         cumul_probs[i] = cumul_probs[i - 1] + probabilities[i];
     }
 }
@@ -110,11 +110,10 @@ void cumulate_probabilities(const double *probabilities, double *cumul_probs, MK
  * @param result The buffer to hold the choices
  * @return The sum of the choices made
  */
-MKL_LONG weighted_choices(const MKL_INT *vals, const double *weights, MKL_INT nnz, int num_samples,
-                          double *result) {
+MKL_LONG weighted_choices(const MKL_INT *vals, const double *weights, MKL_INT nnz, int num_samples, double *result) {
+    double target;
     MKL_INT temp;
     MKL_LONG sum = 0;
-    double target;
     for (int i = 0; i < num_samples; ++i) {
         target = rand() / (double) RAND_MAX;
         temp = binary_search(weights, target, nnz);
@@ -140,35 +139,36 @@ double sample(double *probabilities, qaoa_data_t *meta_spec) {
     double *cumul_probs = NULL;
     double *samples = NULL;
     MKL_INT nnz;
-    MKL_LONG sample_sum;
     MKL_INT best_sample;
-    MKL_INT *vals = NULL;
-
-
-
     MKL_INT space_dimension = meta_spec->machine_spec->space_dimension;
+    MKL_INT *vals = NULL;
+    MKL_LONG sample_sum;
+
     vals = mkl_malloc(meta_spec->cost_data->cx_range * sizeof(MKL_INT), DEF_ALIGNMENT);
     prob_compact = mkl_calloc((size_t) meta_spec->cost_data->cx_range, sizeof(double), DEF_ALIGNMENT);
-
+    hamiltonian = mkl_malloc(space_dimension * sizeof(double), DEF_ALIGNMENT);
     check_alloc(vals);
     check_alloc(prob_compact);
-
-    hamiltonian = mkl_malloc(space_dimension * sizeof(double), DEF_ALIGNMENT);
     check_alloc(hamiltonian);
+
     extract_hamiltonian_double(meta_spec->uc, hamiltonian, space_dimension);
 
     nnz = compact_probabilities(probabilities, hamiltonian, vals, prob_compact, meta_spec);
     mkl_free(hamiltonian);
+
     cumul_probs = mkl_calloc((size_t) nnz, sizeof(double), DEF_ALIGNMENT);
     check_alloc(cumul_probs);
 
     cumulate_probabilities(prob_compact, cumul_probs, nnz);
     mkl_free(prob_compact);
+
     //Allocate samples
     samples = mkl_malloc(meta_spec->run_spec->num_samples * sizeof(double), DEF_ALIGNMENT);
     check_alloc(samples);
+
     //Perform weighted samples
     sample_sum = weighted_choices(vals, cumul_probs, nnz, meta_spec->run_spec->num_samples, samples);
+
     //Extract useful data
     expectation = (double) sample_sum / (double) meta_spec->run_spec->num_samples; // Estimating expectation value
     best_sample = (MKL_INT) samples[cblas_idamax(meta_spec->run_spec->num_samples, samples, 1)];
@@ -185,19 +185,18 @@ double sample(double *probabilities, qaoa_data_t *meta_spec) {
 /**
  * @brief Determines the expectation value of measurement with respect to the problem Hamiltonian
  * @param state The complex state-vector
- * @param meta_data The data-structure containing relevant information
+ * @param meta_spec The data-structure containing relevant information
  * @return Double value which is the expectation value of measurement
  */
-double expectation_value(double *probabilities, qaoa_data_t *meta_data) {
-    MKL_INT space_dimension = meta_data->machine_spec->space_dimension;
-    double *hamiltonian = NULL;
+double expectation_value(double *probabilities, qaoa_data_t *meta_spec) {
     double expectation;
+    double *hamiltonian = NULL;
+    MKL_INT space_dimension = meta_spec->machine_spec->space_dimension;
 
     hamiltonian = mkl_malloc(space_dimension * sizeof(double), DEF_ALIGNMENT);
-    extract_hamiltonian_double(meta_data->uc, hamiltonian, space_dimension);
-
+    extract_hamiltonian_double(meta_spec->uc, hamiltonian, space_dimension);
     expectation = cblas_ddot(space_dimension, probabilities, 1, hamiltonian, 1);
-    mkl_free(hamiltonian);
 
+    mkl_free(hamiltonian);
     return expectation;
 }

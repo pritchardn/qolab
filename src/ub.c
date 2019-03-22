@@ -18,8 +18,7 @@ MKL_INT generate_ub(qaoa_data_t *meta_data, bool (*mask)(unsigned int, cost_data
     MKL_INT nnz = 0;
     MKL_INT space_dimension = meta_data->machine_spec->space_dimension;
     double *values = mkl_calloc((size_t) space_dimension * (meta_data->machine_spec->num_qubits + 1),
-                                sizeof(double),
-                                DEF_ALIGNMENT);
+                                sizeof(double), DEF_ALIGNMENT);
     MKL_INT *row_begin = mkl_calloc((size_t) space_dimension + 1, sizeof(MKL_INT), DEF_ALIGNMENT);
     MKL_INT *row_end = mkl_calloc((size_t) space_dimension + 1, sizeof(MKL_INT), DEF_ALIGNMENT);
     MKL_INT *col_index = mkl_calloc((size_t) space_dimension * (meta_data->machine_spec->num_qubits) + 1,

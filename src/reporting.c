@@ -12,9 +12,9 @@
  * @return A new file pointer
  */
 FILE *file_generate(qaoa_data_t *meta_spec){
-    FILE *rtn;
-    struct tm *now;
     time_t seconds;
+    FILE *result;
+    struct tm *now;
     char buffer[128];
 
     seconds = time(NULL);
@@ -26,13 +26,13 @@ FILE *file_generate(qaoa_data_t *meta_spec){
             meta_spec->opt_spec->nlopt_method,
             now->tm_mday, now->tm_mon + 1, now->tm_hour, now->tm_min, now->tm_sec);
 
-    rtn = fopen(buffer, "w+");
+    result = fopen(buffer, "w+");
 
-    if(rtn == NULL){
+    if (result == NULL) {
         perror("Attempting to open report file");
     }
     printf("Writing to%s\n", buffer);
-    return rtn;
+    return result;
 }
 
 /**
@@ -40,7 +40,10 @@ FILE *file_generate(qaoa_data_t *meta_spec){
  * @param mach_spec Contains the machine specification
  * @param outfile The file stream to print to
  */
-void machine_report(machine_spec_t * mach_spec, FILE *outfile){
+void machine_report(machine_spec_t *mach_spec, FILE *outfile) {
+    if (outfile == NULL) {
+        outfile = stdout;
+    }
     fprintf(outfile, "Machine Specification:\n"
                      "Qubits: %d\n"
                      "Decomposition: %d\n"
@@ -53,6 +56,9 @@ void machine_report(machine_spec_t * mach_spec, FILE *outfile){
  * @param outfile The file stream to print to
  */
 void timing_report(qaoa_statistics_t *statistics, FILE *outfile){
+    if (outfile == NULL) {
+        outfile = stdout;
+    }
     fprintf(outfile, "Timing report(s):\n"
                      "%f Total\n"
                      "%f UC\n"
@@ -72,6 +78,9 @@ void timing_report(qaoa_statistics_t *statistics, FILE *outfile){
  * @param outfile The file stream to print to
  */
 void result_report(qaoa_statistics_t *statistics, FILE *outfile){
+    if (outfile == NULL) {
+        outfile = stdout;
+    }
     fprintf(outfile, "Result report:\n"
                      "%d %d gOpt, Loc\n"
                      "%f Final Expectation\n"
@@ -81,7 +90,7 @@ void result_report(qaoa_statistics_t *statistics, FILE *outfile){
                      "%f Initial Exp\n",
             statistics->max_value, statistics->max_index,
             statistics->result,
-            (int) statistics->best_sample,
+            (MKL_INT) statistics->best_sample,
             statistics->best_expectation,
             statistics->classical_exp,
             statistics->random_exp);
@@ -95,6 +104,9 @@ void result_report(qaoa_statistics_t *statistics, FILE *outfile){
  * @param outfile The file stream to print to
  */
 void optimiser_report(optimization_spec_t *opt_spec, int P, FILE *outfile) {
+    if (outfile == NULL) {
+        outfile = stdout;
+    }
     fprintf(outfile, "Optimisation report\n"
                      "%d Method\n"
                      "%d Max evals\n"
@@ -144,6 +156,9 @@ void final_report(qaoa_data_t *meta_spec){
  * @param outfile The file stream to print to
  */
 void nlopt_termination_parser(nlopt_result nlopt_code, FILE *outfile) {
+    if (outfile == NULL) {
+        outfile = stderr;
+    }
     switch (nlopt_code) {
         case NLOPT_SUCCESS:
             fprintf(outfile, "1 nlopt_success\n");

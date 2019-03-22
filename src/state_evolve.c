@@ -23,8 +23,9 @@ void initialise_state(MKL_Complex16 *state, machine_spec_t *mach_spec) {
  * @param meta_spec The data structure containing simulation information
  * @param output The double array which will hold the result
  */
-void compute_probabilities(MKL_Complex16 * state, qaoa_data_t *meta_spec, double *output){
-    MKL_Complex16 *z_probabilities = mkl_malloc(meta_spec->machine_spec->space_dimension * sizeof(MKL_Complex16), DEF_ALIGNMENT);
+void compute_probabilities(MKL_Complex16 *state, double *output, qaoa_data_t *meta_spec) {
+    MKL_Complex16 *z_probabilities = mkl_malloc(meta_spec->machine_spec->space_dimension * sizeof(MKL_Complex16),
+                                                DEF_ALIGNMENT);
     check_alloc(z_probabilities);
     vzMulByConj(meta_spec->machine_spec->space_dimension, state, state, z_probabilities);
     vzAbs(meta_spec->machine_spec->space_dimension, z_probabilities, output);
@@ -37,30 +38,35 @@ void compute_probabilities(MKL_Complex16 * state, qaoa_data_t *meta_spec, double
  * @param meta_spec Used to determine the size of the state vector
  */
 void check_probabilities(MKL_Complex16 *state, qaoa_data_t *meta_spec) {
-    //TODO: Unit test for normalisation
     double result = 0.0;
     cblas_zdotc_sub(meta_spec->machine_spec->space_dimension, state, 1, state, 1, &result);
     if (result != 1.0) {
-        printf("Not normalised\n");
+        fprintf(stderr, "State vector not normalized\n");
         exit(EXIT_FAILURE);
     }
     //printf("%f\n", result);
 }
 
-double measure(MKL_Complex16 *state, qaoa_data_t *meta_data) {
+/**
+ * @brief Generalised method which performs a measurment on a given quantum state-vector
+ * @details Currently supports computing the expectation value or estimating this value through sampling
+ * @param state The state-vector in question
+ * @param meta_spec Contains extra required information like whether we are sampling or not
+ * @return An expectation value for the state (exact or estimated)
+ */
+double measure(MKL_Complex16 *state, qaoa_data_t *meta_spec) {
     double result;
-    double *probabilities = mkl_malloc(meta_data->machine_spec->space_dimension * sizeof(double), DEF_ALIGNMENT);
-
+    double *probabilities = mkl_malloc(meta_spec->machine_spec->space_dimension * sizeof(double), DEF_ALIGNMENT);
     check_alloc(probabilities);
 
-    compute_probabilities(state, meta_data, probabilities);
+    compute_probabilities(state, probabilities, meta_spec);
 
-    if (meta_data->run_spec->sampling) {
+    if (meta_spec->run_spec->sampling) {
         //Perform sampling
-        result = sample(probabilities, meta_data);
+        result = sample(probabilities, meta_spec);
     } else {
         //Perform expectation value
-        result = expectation_value(probabilities, meta_data);
+        result = expectation_value(probabilities, meta_spec);
     }
 
     mkl_free(probabilities);
@@ -84,7 +90,7 @@ double evolve(unsigned num_params, const double *x, double *grad, qaoa_data_t *m
     MKL_Complex16 *state = mkl_calloc((size_t)meta_spec->machine_spec->space_dimension, sizeof(MKL_Complex16), DEF_ALIGNMENT);
     check_alloc(state);
     initialise_state(state, meta_spec->machine_spec);
-    //Apply our QAOA generation
+    //Apply our QAOA iteration
     for(int i = 0; i < num_params / 2; ++i){
         spmatrix_expm_z_diag(meta_spec->uc, x[i], meta_spec->machine_spec->space_dimension, state);
         spmatrix_expm_cheby(&meta_spec->ub, state, (MKL_Complex16) {x[i + P], 0.0},
@@ -126,7 +132,7 @@ double evolve_restricted(unsigned num_params, const double *x, double *grad, qao
     check_alloc(state);
     initialise_state(state, meta_spec->machine_spec);
     check_probabilities(state, meta_spec);
-    //Apply our QAOA generation
+    //Apply our restricted QAOA generation
     for (int i = 0; i < (num_params - 1) / 2; ++i) {
         spmatrix_expm_cheby(&meta_spec->ub, state, (MKL_Complex16) {x[i + P], 0.0},
                             (MKL_Complex16) {0.0, -meta_spec->ub_eigenvalue},
