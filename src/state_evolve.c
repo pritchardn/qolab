@@ -40,7 +40,7 @@ void compute_probabilities(MKL_Complex16 *state, double *output, qaoa_data_t *me
 void check_probabilities(MKL_Complex16 *state, qaoa_data_t *meta_spec) {
     double result = 0.0;
     cblas_zdotc_sub(meta_spec->machine_spec->space_dimension, state, 1, state, 1, &result);
-    if (result != 1.0) {
+    if (fabs(result - 1.0) > 1e-15) {
         fprintf(stderr, "State vector not normalized\n");
         exit(EXIT_FAILURE);
     }
