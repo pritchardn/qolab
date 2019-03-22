@@ -77,7 +77,7 @@ void optimiser_Initialize(qaoa_data_t *meta_spec) {
         meta_spec->opt_spec->upper_bounds[i] = 2 * (double) PI;
         meta_spec->opt_spec->lower_bounds[i] = 0.0;
         meta_spec->opt_spec->upper_bounds[i + meta_spec->machine_spec->P] = (double) PI;
-        meta_spec->opt_spec->lower_bounds[i+meta_spec->machine_spec->P] = 0.0;
+        meta_spec->opt_spec->lower_bounds[i + meta_spec->machine_spec->P] = 0.0;
         meta_spec->opt_spec->parameters[i] = (double) PI;
         meta_spec->opt_spec->parameters[i + meta_spec->machine_spec->P] = (double) PI / 2.0;
     }
@@ -147,7 +147,8 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimization_spec_t
     }
     optimiser_Initialize(&meta_spec);
     meta_spec.qaoa_statistics->startTimes[3] = dsecnd();
-    meta_spec.qaoa_statistics->term_status = nlopt_optimize(meta_spec.opt_spec->optimiser, opt_spec->parameters, &meta_spec.qaoa_statistics->result);
+    meta_spec.qaoa_statistics->term_status = nlopt_optimize(meta_spec.opt_spec->optimiser,
+                                                            opt_spec->parameters, &meta_spec.qaoa_statistics->result);
     meta_spec.qaoa_statistics->endTimes[3] = dsecnd();
     meta_spec.qaoa_statistics->endTimes[0] = dsecnd();
     if (meta_spec.run_spec->verbose) {
@@ -156,6 +157,5 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimization_spec_t
     //Teardown
 
     final_report(&meta_spec);
-
     qaoa_teardown(&meta_spec);
 }

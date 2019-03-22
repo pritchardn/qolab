@@ -54,25 +54,25 @@ void extract_hamiltonian_double(MKL_Complex16 *uc, double *hamiltonian, MKL_INT 
  * @param hamiltonian The values the probabilities correspond to
  * @param values The buffer to hold the resuting compacted values
  * @param prob_compact The buffer to hold the resulting compacted probabilities
- * @param meta_data Contains extra simulation data like the largest expected value to encounter
+ * @param meta_spec Contains extra simulation data like the largest expected value to encounter
  * @warning The length of values and prob_compact are not checked and need to be large enough to hold all discrete
  * values present
  * @return The number of distinct values present
  */
 MKL_INT compact_probabilities(const double *probabilities, const double *hamiltonian, MKL_INT *values,
-                              double *prob_compact, qaoa_data_t *meta_data) {
+                              double *prob_compact, qaoa_data_t *meta_spec) {
     double *sum_vals;
     bool *set_flag;
     MKL_INT nnz = 0;
 
-    size_t num_vals = (size_t) meta_data->cost_data->cx_range;
+    size_t num_vals = (size_t) meta_spec->cost_data->cx_range;
 
     sum_vals = mkl_calloc(num_vals, sizeof(double), DEF_ALIGNMENT);
     set_flag = mkl_calloc(num_vals, sizeof(bool), DEF_ALIGNMENT);
     check_alloc(sum_vals);
     check_alloc(set_flag);
 
-    for (MKL_INT i = 0; i < meta_data->machine_spec->space_dimension; ++i) {
+    for (MKL_INT i = 0; i < meta_spec->machine_spec->space_dimension; ++i) {
         if (!set_flag[(int) hamiltonian[i] - 1]) {
             values[nnz] = (MKL_INT) hamiltonian[i];
             set_flag[(MKL_INT) hamiltonian[i] - 1] = true;
@@ -185,16 +185,16 @@ double sample(double *probabilities, qaoa_data_t *meta_spec) {
 /**
  * @brief Determines the expectation value of measurement with respect to the problem Hamiltonian
  * @param state The complex state-vector
- * @param meta_data The data-structure containing relevant information
+ * @param meta_spec The data-structure containing relevant information
  * @return Double value which is the expectation value of measurement
  */
-double expectation_value(double *probabilities, qaoa_data_t *meta_data) {
+double expectation_value(double *probabilities, qaoa_data_t *meta_spec) {
     double expectation;
     double *hamiltonian = NULL;
-    MKL_INT space_dimension = meta_data->machine_spec->space_dimension;
+    MKL_INT space_dimension = meta_spec->machine_spec->space_dimension;
 
     hamiltonian = mkl_malloc(space_dimension * sizeof(double), DEF_ALIGNMENT);
-    extract_hamiltonian_double(meta_data->uc, hamiltonian, space_dimension);
+    extract_hamiltonian_double(meta_spec->uc, hamiltonian, space_dimension);
     expectation = cblas_ddot(space_dimension, probabilities, 1, hamiltonian, 1);
 
     mkl_free(hamiltonian);
