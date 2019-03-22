@@ -94,7 +94,7 @@ void spmatrix_expm_cheby(sparse_matrix_t *matrix, MKL_Complex16 *state, MKL_Comp
     cblas_zaxpby(side_len, &mkl_ztemp1, work[1], 1, &mkl_ztemp2, work[3], 1);
 
     terms = 0;
-    while (fabs(2.0 * jn(terms, alpha)) > 1e-18) {
+    while (fabs(2.0 * jn(terms, alpha)) > 1e-17) {
         terms++;
     }
 
