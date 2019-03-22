@@ -35,8 +35,8 @@ void spmatrix_expm_z_diag(const MKL_Complex16 *diag, double alpha, MKL_INT nnz, 
  * @param matrix The MKl sparse matrix to be exponentiated
  * @param state The vector to which the action is applied
  * @param dt A complex number scaling factor
- * @param minE The minimal eigen-value
- * @param maxE The maximal eigen-value
+ * @param minE The minimal Eigenvalue
+ * @param maxE The maximal Eigenvalue
  * @param side_len
  */
 void spmatrix_expm_cheby(sparse_matrix_t *matrix, MKL_Complex16 *state, MKL_Complex16 dt,
