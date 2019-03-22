@@ -13,6 +13,7 @@
 #include <stdbool.h>
 #include "globals.h"
 
-void generate_ub(qaoa_data_t *meta_data, bool (*mask)(unsigned int, cost_data_t *cost_data));
+MKL_INT generate_ub(qaoa_data_t *meta_data, bool (*mask)(unsigned int, cost_data_t *cost_data));
 
+void convert_ub(qaoa_data_t *meta_data, MKL_INT ub_nnz);
 #endif //GRAPHSIMILARITY_UB_H

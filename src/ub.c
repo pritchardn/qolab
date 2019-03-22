@@ -12,7 +12,7 @@
  * @param meta_data Describes the full simulation. num_qubits, cost_data are used
  * @param mask (optional) Returns true given a valid input, false otherwise.
  */
-void generate_ub(qaoa_data_t *meta_data, bool (*mask)(unsigned int, cost_data_t *cost_data)) {
+MKL_INT generate_ub(qaoa_data_t *meta_data, bool (*mask)(unsigned int, cost_data_t *cost_data)) {
     sparse_status_t status;
     MKL_INT nnz = 0;
     MKL_INT space_dimension = meta_data->machine_spec->space_dimension;
@@ -42,4 +42,33 @@ void generate_ub(qaoa_data_t *meta_data, bool (*mask)(unsigned int, cost_data_t 
     status = mkl_sparse_d_create_csr(&meta_data->ub, (sparse_index_base_t) SPARSE_INDEX_BASE_ZERO, \
     space_dimension, space_dimension, row_begin, row_end, col_index, values);
     mkl_error_parse(status, stdout);
+
+    return nnz;
+}
+
+void convert_ub(qaoa_data_t *meta_data, MKL_INT ub_nnz) {
+    sparse_status_t status;
+    sparse_index_base_t index_base;
+    MKL_INT rows;
+    MKL_INT cols;
+    MKL_INT *rows_start;
+    MKL_INT *rows_end;
+    MKL_INT *col_indx;
+    double *values;
+    MKL_Complex16 *new_values = mkl_calloc((size_t) ub_nnz, sizeof(MKL_Complex16), DEF_ALIGNMENT);
+    check_alloc(new_values);
+
+    status = mkl_sparse_d_export_csr(meta_data->ub, &index_base, &rows, &cols, &rows_start, &rows_end, &col_indx,
+                                     &values);
+    mkl_error_parse(status, stderr);
+
+    for (MKL_INT i = 0; i < ub_nnz; ++i) {
+        new_values[i].imag = -1.0;
+    }
+
+    status = mkl_sparse_z_create_csr(&meta_data->ub, index_base, rows, cols, rows_start, rows_end, col_indx,
+                                     new_values);
+    mkl_error_parse(status, stderr);
+
+    mkl_free(values);
 }
