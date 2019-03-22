@@ -104,6 +104,7 @@ void optimiser_Initialize(qaoa_data_t *meta_spec) {
 void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimization_spec_t *opt_spec, run_spec_t *run_spec) {
     qaoa_data_t meta_spec;
     qaoa_statistics_t statistics;
+    MKL_INT ub_nnz;
     statistics.num_evals = 0;
     statistics.best_sample = -INFINITY;
     statistics.best_expectation = -INFINITY;
@@ -131,7 +132,10 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimization_spec_t
     }
     //Initialise UB
     meta_spec.qaoa_statistics->startTimes[2] = dsecnd();
-    generate_ub(&meta_spec, mask);
+    ub_nnz = generate_ub(&meta_spec, mask);
+    //TODO: Solve for eigenvalues
+    //Convert UB to complex values
+    convert_ub(&meta_spec, ub_nnz);
     meta_spec.qaoa_statistics->endTimes[2] = dsecnd();
     if (meta_spec.run_spec->verbose) {
         printf("UB Created\n");
