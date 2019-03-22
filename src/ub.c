@@ -16,9 +16,9 @@ void generate_ub(qaoa_data_t *meta_data, bool (*mask)(unsigned int, cost_data_t 
     sparse_status_t status;
     MKL_INT nnz = 0;
     MKL_INT space_dimension = meta_data->machine_spec->space_dimension;
-    MKL_Complex16 *values = mkl_calloc((size_t) space_dimension * (meta_data->machine_spec->num_qubits + 1),
-                                       sizeof(MKL_Complex16),
-                                       DEF_ALIGNMENT);
+    double *values = mkl_calloc((size_t) space_dimension * (meta_data->machine_spec->num_qubits + 1),
+                                sizeof(double),
+                                DEF_ALIGNMENT);
     MKL_INT *row_begin = mkl_calloc((size_t) space_dimension + 1, sizeof(MKL_INT), DEF_ALIGNMENT);
     MKL_INT *row_end = mkl_calloc((size_t) space_dimension + 1, sizeof(MKL_INT), DEF_ALIGNMENT);
     MKL_INT *col_index = mkl_calloc((size_t) space_dimension * (meta_data->machine_spec->num_qubits) + 1,
@@ -32,14 +32,14 @@ void generate_ub(qaoa_data_t *meta_data, bool (*mask)(unsigned int, cost_data_t 
         for (unsigned int j = 0; j < meta_data->machine_spec->num_qubits; ++j) {
             unsigned int col = ((i ^ ((unsigned int) 1 << j)));
             if (mask(col, meta_data->cost_data)) {
-                values[nnz].imag = -1.0;
+                values[nnz] = 1.0;
                 row_end[i] = nnz;
                 col_index[nnz] = (MKL_INT) col;
                 nnz++;
             }
         }
     }
-    status = mkl_sparse_z_create_csr(&meta_data->ub, (sparse_index_base_t) SPARSE_INDEX_BASE_ZERO, \
+    status = mkl_sparse_d_create_csr(&meta_data->ub, (sparse_index_base_t) SPARSE_INDEX_BASE_ZERO, \
     space_dimension, space_dimension, row_begin, row_end, col_index, values);
     mkl_error_parse(status, stdout);
 }
