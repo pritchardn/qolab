@@ -76,6 +76,7 @@ typedef struct{
     run_spec_t *run_spec;               /**< Defines run-time parameters */
     cost_data_t *cost_data;             /**< Contains the problem-dependent information */
     sparse_matrix_t ub;                 /**< The data structure containing the driver hamiltonian */
+    double ub_eigenvalue;               /**< The leading eigenvalue of the UB matrix */
     MKL_Complex16 *uc;                  /**< The data structure containing the cost function */
     qaoa_statistics_t *qaoa_statistics; /**< Contains run-time statistics */
     optimization_spec_t *opt_spec;      /**< Specifies the classical optimisation scheme */

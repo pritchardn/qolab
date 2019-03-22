@@ -7,17 +7,22 @@
 #include "uc.h"
 #include "state_evolve.h"
 #include "reporting.h"
+#include "eigen_solve.h"
 
 //TODO Unit test all of the these
 /**
  * @brief Checks paramters in the meta-specification for validity
  * @param meta_spec The data-structure containing all relevant fields
+ * @warning Number of qubits cannot exceed 31, we are forced to used 32bit integers for intel's FFTW backend
  */
 void parameter_checking(qaoa_data_t *meta_spec) {
     //Check machine specification
     if (meta_spec->machine_spec->num_qubits <= 0) {
         fprintf(stderr, "Invalid number of qubits.\n");
         exit(EXIT_FAILURE);
+    }
+    if (meta_spec->machine_spec->num_qubits > 31) {
+        fprintf(stderr, "Too many qubits, numerical stability will fail.\n");
     }
     if (meta_spec->machine_spec->P <= 0) {
         fprintf(stderr, "Invalid amount of decomposition.\n");
@@ -104,6 +109,7 @@ void optimiser_Initialize(qaoa_data_t *meta_spec) {
 void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimization_spec_t *opt_spec, run_spec_t *run_spec) {
     qaoa_data_t meta_spec;
     qaoa_statistics_t statistics;
+    MKL_INT ub_nnz;
     statistics.num_evals = 0;
     statistics.best_sample = -INFINITY;
     statistics.best_expectation = -INFINITY;
@@ -131,7 +137,10 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimization_spec_t
     }
     //Initialise UB
     meta_spec.qaoa_statistics->startTimes[2] = dsecnd();
-    generate_ub(&meta_spec, mask);
+    ub_nnz = generate_ub(&meta_spec, mask);
+    meta_spec.ub_eigenvalue = max_eigen_find(meta_spec.ub);
+    //Convert UB to complex values
+    convert_ub(&meta_spec, ub_nnz);
     meta_spec.qaoa_statistics->endTimes[2] = dsecnd();
     if (meta_spec.run_spec->verbose) {
         printf("UB Created\n");

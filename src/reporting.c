@@ -44,7 +44,7 @@ void machine_report(machine_spec_t * mach_spec, FILE *outfile){
     fprintf(outfile, "Machine Specification:\n"
                      "Qubits: %d\n"
                      "Decomposition: %d\n"
-                     "Space Dimension: %lld\n", mach_spec->num_qubits, mach_spec->P, mach_spec->space_dimension);
+                     "Space Dimension: %d\n", mach_spec->num_qubits, mach_spec->P, mach_spec->space_dimension);
 }
 
 /**

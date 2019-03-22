@@ -110,16 +110,16 @@ void cumulate_probabilities(const double *probabilities, double *cumul_probs, MK
  * @param result The buffer to hold the choices
  * @return The sum of the choices made
  */
-MKL_INT weighted_choices(const MKL_INT *vals, const double *weights, MKL_INT nnz, int num_samples,
-                         MKL_INT *result) {
+MKL_LONG weighted_choices(const MKL_INT *vals, const double *weights, MKL_INT nnz, int num_samples,
+                          double *result) {
     MKL_INT temp;
-    MKL_INT sum = 0;
+    MKL_LONG sum = 0;
     double target;
     for (int i = 0; i < num_samples; ++i) {
         target = rand() / (double) RAND_MAX;
         temp = binary_search(weights, target, nnz);
         result[i] = vals[temp];
-        sum += result[i];
+        sum += (MKL_INT) result[i];
     }
     return sum;
 }
@@ -138,11 +138,12 @@ double sample(double *probabilities, qaoa_data_t *meta_spec) {
     double *hamiltonian = NULL;
     double *prob_compact = NULL;
     double *cumul_probs = NULL;
+    double *samples = NULL;
     MKL_INT nnz;
-    MKL_INT sample_sum;
+    MKL_LONG sample_sum;
     MKL_INT best_sample;
     MKL_INT *vals = NULL;
-    MKL_INT *samples = NULL;
+
 
 
     MKL_INT space_dimension = meta_spec->machine_spec->space_dimension;
@@ -153,22 +154,24 @@ double sample(double *probabilities, qaoa_data_t *meta_spec) {
     check_alloc(prob_compact);
 
     hamiltonian = mkl_malloc(space_dimension * sizeof(double), DEF_ALIGNMENT);
+    check_alloc(hamiltonian);
     extract_hamiltonian_double(meta_spec->uc, hamiltonian, space_dimension);
 
     nnz = compact_probabilities(probabilities, hamiltonian, vals, prob_compact, meta_spec);
     mkl_free(hamiltonian);
     cumul_probs = mkl_calloc((size_t) nnz, sizeof(double), DEF_ALIGNMENT);
+    check_alloc(cumul_probs);
 
     cumulate_probabilities(prob_compact, cumul_probs, nnz);
     mkl_free(prob_compact);
-
     //Allocate samples
-    samples = mkl_malloc(meta_spec->run_spec->num_samples * sizeof(MKL_INT), DEF_ALIGNMENT);
+    samples = mkl_malloc(meta_spec->run_spec->num_samples * sizeof(double), DEF_ALIGNMENT);
+    check_alloc(samples);
     //Perform weighted samples
     sample_sum = weighted_choices(vals, cumul_probs, nnz, meta_spec->run_spec->num_samples, samples);
     //Extract useful data
     expectation = (double) sample_sum / (double) meta_spec->run_spec->num_samples; // Estimating expectation value
-    best_sample = samples[cblas_idamax(meta_spec->run_spec->num_samples, (double *) samples, 1)];
+    best_sample = (MKL_INT) samples[cblas_idamax(meta_spec->run_spec->num_samples, samples, 1)];
 
     if (best_sample > meta_spec->qaoa_statistics->best_sample) {
         meta_spec->qaoa_statistics->best_sample = best_sample;

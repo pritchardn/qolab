@@ -40,7 +40,11 @@ void check_probabilities(MKL_Complex16 *state, qaoa_data_t *meta_spec) {
     //TODO: Unit test for normalisation
     double result = 0.0;
     cblas_zdotc_sub(meta_spec->machine_spec->space_dimension, state, 1, state, 1, &result);
-    printf("%f\n", result);
+    if (result != 1.0) {
+        printf("Not normalised\n");
+        exit(EXIT_FAILURE);
+    }
+    //printf("%f\n", result);
 }
 
 double measure(MKL_Complex16 *state, qaoa_data_t *meta_data) {
@@ -83,7 +87,9 @@ double evolve(unsigned num_params, const double *x, double *grad, qaoa_data_t *m
     //Apply our QAOA generation
     for(int i = 0; i < num_params / 2; ++i){
         spmatrix_expm_z_diag(meta_spec->uc, x[i], meta_spec->machine_spec->space_dimension, state);
-        spmatrix_expm_cheby(&meta_spec->ub, state, (MKL_Complex16){x[i+P], 0.0}, (MKL_Complex16){0.0, -meta_spec->machine_spec->num_qubits},(MKL_Complex16){0.0, meta_spec->machine_spec->num_qubits}, meta_spec->machine_spec->space_dimension);
+        spmatrix_expm_cheby(&meta_spec->ub, state, (MKL_Complex16) {x[i + P], 0.0},
+                            (MKL_Complex16) {0.0, -meta_spec->ub_eigenvalue},
+                            (MKL_Complex16) {0.0, meta_spec->ub_eigenvalue}, meta_spec->machine_spec->space_dimension);
     }
     meta_spec->qaoa_statistics->num_evals++;
     //measure
@@ -119,19 +125,19 @@ double evolve_restricted(unsigned num_params, const double *x, double *grad, qao
                                       DEF_ALIGNMENT);
     check_alloc(state);
     initialise_state(state, meta_spec->machine_spec);
+    check_probabilities(state, meta_spec);
     //Apply our QAOA generation
     for (int i = 0; i < (num_params - 1) / 2; ++i) {
         spmatrix_expm_cheby(&meta_spec->ub, state, (MKL_Complex16) {x[i + P], 0.0},
-                            (MKL_Complex16) {0.0, -meta_spec->machine_spec->num_qubits},
-                            (MKL_Complex16) {0.0, meta_spec->machine_spec->num_qubits},
+                            (MKL_Complex16) {0.0, -meta_spec->ub_eigenvalue},
+                            (MKL_Complex16) {0.0, meta_spec->ub_eigenvalue},
                             meta_spec->machine_spec->space_dimension);
         spmatrix_expm_z_diag(meta_spec->uc, x[i], meta_spec->machine_spec->space_dimension, state);
     }
     spmatrix_expm_cheby(&meta_spec->ub, state, (MKL_Complex16) {x[num_params], 0.0},
-                        (MKL_Complex16) {0.0, -meta_spec->machine_spec->num_qubits},
-                        (MKL_Complex16) {0.0, meta_spec->machine_spec->num_qubits},
+                        (MKL_Complex16) {0.0, -meta_spec->ub_eigenvalue},
+                        (MKL_Complex16) {0.0, meta_spec->ub_eigenvalue},
                         meta_spec->machine_spec->space_dimension);
-
     meta_spec->qaoa_statistics->num_evals++;
     //measure
     result = measure(state, meta_spec);
