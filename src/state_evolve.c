@@ -40,7 +40,7 @@ void check_probabilities(MKL_Complex16 *state, qaoa_data_t *meta_spec) {
     //TODO: Unit test for normalisation
     double result = 0.0;
     cblas_zdotc_sub(meta_spec->machine_spec->space_dimension, state, 1, state, 1, &result);
-    printf("%f\n", result);
+    //printf("%f\n", result);
 }
 
 double measure(MKL_Complex16 *state, qaoa_data_t *meta_data) {
