@@ -19,6 +19,9 @@ void parameter_checking(qaoa_data_t *meta_spec) {
         fprintf(stderr, "Invalid number of qubits.\n");
         exit(EXIT_FAILURE);
     }
+    if (meta_spec->machine_spec->num_qubits > 31) {
+        fprintf(stderr, "Too many qubits, numerical stability will fail.\n");
+    }
     if (meta_spec->machine_spec->P <= 0) {
         fprintf(stderr, "Invalid amount of decomposition.\n");
         exit(EXIT_FAILURE);

@@ -13,17 +13,8 @@
  * All parameters which must be specified are in this example.
  */
 int main(int argc, char *argv[]){
-    MKL_INT ia[5] = {1, 3, 5, 7, 9};                         /* ia array from CSR format */
-    MKL_INT ja[8] = {1, 2, 1, 2, 3, 4, 3, 4};                   /* ja array from CSR format */
-    double a[8] = {6.0, 2.0, 2.0, 3.0, 2.0, -1.0, -1.0, 2.0}; /* val array from CSR format */
-    sparse_matrix_t A;
-    sparse_status_t status;
-    status = mkl_sparse_d_create_csr(&A, SPARSE_INDEX_BASE_ONE, 4, 4, ia, ia + 1, ja, a);
-    if (status != 0) {
-        printf("error building matrix\n");
-        exit(EXIT_FAILURE);
-    }
-    test_eigen_solve(&A, 4, 4, 8);
+    max_eigen_find();
+
     exit(EXIT_SUCCESS);
     run_spec_t run_spec;
     run_spec.correct = true;

@@ -8,5 +8,5 @@
 
 #include <mkl.h>
 
-void test_eigen_solve(sparse_matrix_t *A, MKL_INT rows, MKL_INT cols, MKL_INT nnz);
+double max_eigen_find();
 #endif //QOLAB_EIGEN_SOLVE_H

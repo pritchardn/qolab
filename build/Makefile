@@ -2,8 +2,8 @@
 CC = icc
 
 # compiler flags:
-CFLAGS = -std=c99 -DMKL_ILP64 -O3 -I${MKLROOT}/include -fopenmp -Wall -Werror
-LINKERS =  -Wl, -mkl=parallel -liomp5 -lpthread -lnlopt -lm -ldl
+CFLAGS = -std=c99 -DMKL_LP64 -O3 -I${MKLROOT}/include -fopenmp -Wall -Werror
+LINKERS =  -Wl, -mkl=parallel -L${MKLROOT}/lib/intel64 -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core -liomp5 -lpthread -lm -ldl -lnlopt
 # the build target executable:
 TARGET = ../bin/qaoa.exe
 LOC = ../src
