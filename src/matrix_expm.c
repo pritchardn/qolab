@@ -49,9 +49,9 @@ void spmatrix_expm_cheby(sparse_matrix_t *matrix, MKL_Complex16 *state, MKL_Comp
     MKL_Complex16 mkl_ztemp1, mkl_ztemp2;
     struct matrix_descr descr;
     descr.type = SPARSE_MATRIX_TYPE_GENERAL;
+
     MKL_Complex16 **work = mkl_malloc(4 * sizeof(MKL_Complex16 *), DEF_ALIGNMENT);
     check_alloc(work);
-
     for (i = 0; i < 4; ++i) {
         work[i] = mkl_calloc((size_t) side_len, sizeof(MKL_Complex16), DEF_ALIGNMENT);
         check_alloc(work[i]);
