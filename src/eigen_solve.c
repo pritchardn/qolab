@@ -65,7 +65,6 @@ double max_eigen_find(sparse_matrix_t A) {
     /* Step 3. Solve the standard Ax = ex eigenvalue problem. */
     info = mkl_sparse_d_ev(&which, pm, A, descr, k0, &k, E, X, res);
 
-    printf("mkl_sparse_d_ev output info %d \n", info);
     if (info != 0) {
         printf("Routine mkl_sparse_d_ev returns code of ERROR: %i", info);
         exit(EXIT_FAILURE);
