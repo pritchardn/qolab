@@ -23,7 +23,7 @@ int main(int argc, char *argv[]){
         printf("error building matrix\n");
         exit(EXIT_FAILURE);
     }
-    max_eigen_find(A);
+    printf("%f\n", max_eigen_find(A));
     exit(EXIT_SUCCESS);
     run_spec_t run_spec;
     run_spec.correct = true;

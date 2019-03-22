@@ -8,9 +8,14 @@
 #include "mkl.h"
 #include "globals.h"
 
+/**
+ * @brief Finds the largest eigenvalue of a sparse double matrix A
+ * @param A The matrix in quetion
+ * @return Double, the largest eigenvalue found
+ * @warning Check for Intel MKL fftw 64bit support, this is the bottleneck forcing 32-bit execution
+ */
 double max_eigen_find(sparse_matrix_t A) {
     double result;
-    double Eig[4] = {1.0, 2.0, 3.0, 7.0}; /* Exact eigenvalues */
 
     MKL_INT rows;
     MKL_INT cols;
@@ -26,9 +31,9 @@ double max_eigen_find(sparse_matrix_t A) {
     mkl_error_parse(status, stderr);
 
     /* mkl_sparse_d_ev input parameters */
-    char which = 'S'; /* Which eigenvalues to calculate. ('L' - largest (algebraic) eigenvalues, 'S' - smallest (algebraic) eigenvalues) */
+    char which = 'L'; /* Which eigenvalues to calculate. ('L' - largest (algebraic) eigenvalues, 'S' - smallest (algebraic) eigenvalues) */
     MKL_INT pm[128];     /* This array is used to pass various parameters to Extended Eigensolver Extensions routines. */
-    MKL_INT k0 = 3;     /* Desired number of max/min eigenvalues */
+    MKL_INT k0 = 1;     /* Desired number of max/min eigenvalues */
 
     /* mkl_sparse_d_ev output parameters */
     MKL_INT k;           /* Number of eigenvalues found (might be less than k0). */
@@ -63,7 +68,7 @@ double max_eigen_find(sparse_matrix_t A) {
 
     printf("mkl_sparse_d_ev output info %d \n", info);
     if (info != 0) {
-        printf("Routine mkl_sparse_d_ev returns code of ERROR: %i", (int) info);
+        printf("Routine mkl_sparse_d_ev returns code of ERROR: %i", info);
         exit(EXIT_FAILURE);
     }
     printf("*************************************************\n");
@@ -72,10 +77,10 @@ double max_eigen_find(sparse_matrix_t A) {
     printf("#mode found/subspace %d %d \n", k, k0);
     printf("Index/Exact Eigenvalues/Estimated Eigenvalues/Residuals\n");
     for (i = 0; i < k; i++) {
-        printf("   %d  %.15e %.15e %.15e \n", i, Eig[i], E[i], res[i]);
+        printf("   %d  %.15e %.15e \n", i, E[i], res[i]);
     }
 
-    result = E[0];
+    result = E[k0 - 1];
 
     mkl_free(E);
     mkl_free(X);
