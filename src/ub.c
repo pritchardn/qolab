@@ -5,12 +5,13 @@
 #include "ub.h"
 
 /**
- * @brief Generates the driver hamiltonian for a given problem.
+ * @brief Generates the driver hamiltonian for a given problem with double values.
  * @details Defines the continuous time quantum walk that allows for 'probability' to flow around candidate solution bitstrings
  * In the standard QAOA this defines a fully connected hyper-cube, in a restricted QAOA this is a problem dependent
- * subset of this graph
+ * subset of this graph. The double values allow us to quickly solve for the eigenvalues of this matrix
  * @param meta_data Describes the full simulation. num_qubits, cost_data are used
  * @param mask (optional) Returns true given a valid input, false otherwise.
+ * @warning Will need to be converted to a complex matrix before use with the QAOA module
  */
 MKL_INT generate_ub(qaoa_data_t *meta_data, bool (*mask)(unsigned int, cost_data_t *cost_data)) {
     sparse_status_t status;
@@ -46,6 +47,11 @@ MKL_INT generate_ub(qaoa_data_t *meta_data, bool (*mask)(unsigned int, cost_data
     return nnz;
 }
 
+/**
+ * @brief Converts a double valued UB matrix to a complex valued UB matrix
+ * @param meta_data The structure which holds the UB matrix itself
+ * @param ub_nnz The number of non-zero elements in the UB matrix
+ */
 void convert_ub(qaoa_data_t *meta_data, MKL_INT ub_nnz) {
     sparse_status_t status;
     sparse_index_base_t index_base;
@@ -63,6 +69,7 @@ void convert_ub(qaoa_data_t *meta_data, MKL_INT ub_nnz) {
     mkl_error_parse(status, stderr);
 
     for (MKL_INT i = 0; i < ub_nnz; ++i) {
+        //Shortcut to avoid * -I later
         new_values[i].imag = -1.0;
     }
 
