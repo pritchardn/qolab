@@ -138,8 +138,7 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimization_spec_t
     //Initialise UB
     meta_spec.qaoa_statistics->startTimes[2] = dsecnd();
     ub_nnz = generate_ub(&meta_spec, mask);
-    double max_eig = max_eigen_find(meta_spec.ub);
-    printf("Maximum eigenvalue = %f\n", max_eig);
+    meta_spec.ub_eigenvalue = max_eigen_find(meta_spec.ub);
     //Convert UB to complex values
     convert_ub(&meta_spec, ub_nnz);
     meta_spec.qaoa_statistics->endTimes[2] = dsecnd();
