@@ -71,14 +71,6 @@ double max_eigen_find(sparse_matrix_t A) {
         printf("Routine mkl_sparse_d_ev returns code of ERROR: %i", info);
         exit(EXIT_FAILURE);
     }
-    printf("*************************************************\n");
-    printf("************** REPORT ***************************\n");
-    printf("*************************************************\n");
-    printf("#mode found/subspace %d %d \n", k, k0);
-    printf("Index/Exact Eigenvalues/Estimated Eigenvalues/Residuals\n");
-    for (i = 0; i < k; i++) {
-        printf("   %d  %.15e %.15e \n", i, E[i], res[i]);
-    }
 
     result = E[k0 - 1];
 
