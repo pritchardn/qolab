@@ -87,7 +87,9 @@ double evolve(unsigned num_params, const double *x, double *grad, qaoa_data_t *m
     //Apply our QAOA generation
     for(int i = 0; i < num_params / 2; ++i){
         spmatrix_expm_z_diag(meta_spec->uc, x[i], meta_spec->machine_spec->space_dimension, state);
-        spmatrix_expm_cheby(&meta_spec->ub, state, (MKL_Complex16){x[i+P], 0.0}, (MKL_Complex16){0.0, -meta_spec->machine_spec->num_qubits},(MKL_Complex16){0.0, meta_spec->machine_spec->num_qubits}, meta_spec->machine_spec->space_dimension);
+        spmatrix_expm_cheby(&meta_spec->ub, state, (MKL_Complex16) {x[i + P], 0.0},
+                            (MKL_Complex16) {0.0, -meta_spec->ub_eigenvalue},
+                            (MKL_Complex16) {0.0, meta_spec->ub_eigenvalue}, meta_spec->machine_spec->space_dimension);
     }
     meta_spec->qaoa_statistics->num_evals++;
     //measure
@@ -127,14 +129,14 @@ double evolve_restricted(unsigned num_params, const double *x, double *grad, qao
     //Apply our QAOA generation
     for (int i = 0; i < (num_params - 1) / 2; ++i) {
         spmatrix_expm_cheby(&meta_spec->ub, state, (MKL_Complex16) {x[i + P], 0.0},
-                            (MKL_Complex16) {0.0, -meta_spec->machine_spec->num_qubits},
-                            (MKL_Complex16) {0.0, meta_spec->machine_spec->num_qubits},
+                            (MKL_Complex16) {0.0, -meta_spec->ub_eigenvalue},
+                            (MKL_Complex16) {0.0, meta_spec->ub_eigenvalue},
                             meta_spec->machine_spec->space_dimension);
         spmatrix_expm_z_diag(meta_spec->uc, x[i], meta_spec->machine_spec->space_dimension, state);
     }
     spmatrix_expm_cheby(&meta_spec->ub, state, (MKL_Complex16) {x[num_params], 0.0},
-                        (MKL_Complex16) {0.0, -meta_spec->machine_spec->num_qubits},
-                        (MKL_Complex16) {0.0, meta_spec->machine_spec->num_qubits},
+                        (MKL_Complex16) {0.0, -meta_spec->ub_eigenvalue},
+                        (MKL_Complex16) {0.0, meta_spec->ub_eigenvalue},
                         meta_spec->machine_spec->space_dimension);
     meta_spec->qaoa_statistics->num_evals++;
     //measure
