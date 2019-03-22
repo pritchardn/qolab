@@ -12,6 +12,7 @@
 /**
  * @brief Checks paramters in the meta-specification for validity
  * @param meta_spec The data-structure containing all relevant fields
+ * @warning Number of qubits cannot exceed 31, we are forced to used 32bit integers for intel's FFTW backend
  */
 void parameter_checking(qaoa_data_t *meta_spec) {
     //Check machine specification
