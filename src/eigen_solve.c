@@ -48,7 +48,6 @@ double max_eigen_find(sparse_matrix_t A) {
     MKL_INT info;               /* Errors */
     MKL_INT compute_vectors = 0;/* Flag to compute eigenvecors */
     MKL_INT tol = 7;            /* Tolerance */
-    int i;
 
     /* Sparse BLAS IE variables */
     struct matrix_descr descr; /* Structure specifying sparse matrix properties */
