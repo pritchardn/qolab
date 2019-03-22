@@ -23,7 +23,7 @@ void initialise_state(MKL_Complex16 *state, machine_spec_t *mach_spec) {
  * @param meta_spec The data structure containing simulation information
  * @param output The double array which will hold the result
  */
-void compute_probabilities(MKL_Complex16 *state, qaoa_data_t *meta_spec, double *output) {
+void compute_probabilities(MKL_Complex16 *state, double *output, qaoa_data_t *meta_spec) {
     MKL_Complex16 *z_probabilities = mkl_malloc(meta_spec->machine_spec->space_dimension * sizeof(MKL_Complex16),
                                                 DEF_ALIGNMENT);
     check_alloc(z_probabilities);
@@ -59,7 +59,7 @@ double measure(MKL_Complex16 *state, qaoa_data_t *meta_spec) {
     double *probabilities = mkl_malloc(meta_spec->machine_spec->space_dimension * sizeof(double), DEF_ALIGNMENT);
     check_alloc(probabilities);
 
-    compute_probabilities(state, meta_spec, probabilities);
+    compute_probabilities(state, probabilities, meta_spec);
 
     if (meta_spec->run_spec->sampling) {
         //Perform sampling
