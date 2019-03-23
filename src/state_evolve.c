@@ -3,6 +3,7 @@
 #include "state_evolve.h"
 #include "matrix_expm.h"
 #include "measurement.h"
+#include "reporting.h"
 
 /**
  * @brief Initializes a state vector as an equal superposition of all bit-strings
@@ -147,6 +148,9 @@ double evolve_restricted(unsigned num_params, const double *x, double *grad, qao
     meta_spec->qaoa_statistics->num_evals++;
     //measure
     result = measure(state, meta_spec);
+    if (meta_spec->run_spec->verbose) {
+        iteration_report(result, meta_spec);
+    }
     //teardown
     mkl_free(state);
     //Return single value;

@@ -126,6 +126,19 @@ void optimiser_report(optimization_spec_t *opt_spec, int P, FILE *outfile) {
 }
 
 /**
+ * @brief Reports on an individual optimisation iteration
+ * @param measurement The most recent measurement value
+ * @param meta_spec Contains all information about the simulation
+ */
+void iteration_report(double measurement, qaoa_data_t *meta_spec) {
+    FILE *oFile = meta_spec->run_spec->outfile;
+    if (meta_spec->run_spec->outfile == NULL) {
+        oFile = stdout;
+    }
+    fprintf(oFile, "%d: %f\n", meta_spec->qaoa_statistics->num_evals, measurement);
+}
+
+/**
  * @brief Print a full report after the simulation has been run
  * @param meta_spec Contains information about the simulation
  */
