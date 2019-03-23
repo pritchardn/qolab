@@ -42,7 +42,7 @@ int main(int argc, char *argv[]){
     generate_graph(cost_data.graph, mach_spec.num_qubits, 0.5);
     print_graph(&cost_data, stdout);
 
-    qaoa(&mach_spec, &cost_data, &opt_spec, &run_spec);
+    qaoa(&mach_spec, &cost_data, &opt_spec, &run_spec, false);
     mkl_free(cost_data.graph);
     return 0;
 }
