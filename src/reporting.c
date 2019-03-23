@@ -110,8 +110,8 @@ void optimiser_report(optimization_spec_t *opt_spec, int P, FILE *outfile) {
     fprintf(outfile, "Optimisation report\n"
                      "%d Method\n"
                      "%d Max evals\n"
-                     "%f xtol\n"
-                     "%f ftol\n",
+                     "%.2e xtol\n"
+                     "%.2e ftol\n",
             opt_spec->nlopt_method,
             opt_spec->max_evals,
             opt_spec->xtol,
