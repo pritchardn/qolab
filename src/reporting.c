@@ -125,6 +125,12 @@ void optimiser_report(optimization_spec_t *opt_spec, int P, FILE *outfile) {
     }fprintf(outfile, "Betas\n");
 }
 
+/**
+ * @brief Reports on an individual optimisation iteration
+ * @param measurement The most recent measurement value
+ * @param meta_spec Contains all information about the simulation
+ * @param outfile Where the report prints to
+ */
 void iteration_report(double measurement, qaoa_data_t *meta_spec, FILE *outfile) {
     if (outfile == NULL) {
         outfile = stdout;
