@@ -44,6 +44,7 @@ typedef struct {
     bool sampling;      /**< Are we sampling? */
     bool verbose;       /**< Should we print everything? */
     bool restricted;    /**< Are we running the restricted version of the QAOA? (https://arxiv.org/abs/1804.08227) */
+    bool restart;       /**< If set, the simulation will retain parameter information between calls to the simulation */
     int num_samples;    /**< The number of samples we use */
     FILE *outfile;      /**< The stream we actually write to (can be stdout or a file) */
 } run_spec_t;
