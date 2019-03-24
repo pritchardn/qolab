@@ -64,6 +64,8 @@ void qaoa_teardown(qaoa_data_t *meta_spec){
 /**
  * @brief Initializes the nlopt optimisation data-structures with provided fields
  * @param meta_spec The data-structure containing all fields
+ * @param retain If set, initializer won't allocate or reset parametesr
+ * @warning Assumes paramters are of appropriate size and contain relevant values
  */
 void optimiser_Initialize(qaoa_data_t *meta_spec, bool retain) {
     int num_params = 2 * meta_spec->machine_spec->P;
@@ -72,13 +74,19 @@ void optimiser_Initialize(qaoa_data_t *meta_spec, bool retain) {
     }
     if (!retain) {
         meta_spec->opt_spec->parameters = mkl_calloc((size_t) num_params, sizeof(double), DEF_ALIGNMENT);
-        meta_spec->opt_spec->lower_bounds = mkl_calloc((size_t) num_params, sizeof(double), DEF_ALIGNMENT);
-        meta_spec->opt_spec->upper_bounds = mkl_calloc((size_t) num_params, sizeof(double), DEF_ALIGNMENT);
         for (int i = 0; i < meta_spec->machine_spec->P; ++i) {
             meta_spec->opt_spec->parameters[i] = (double) PI;
             meta_spec->opt_spec->parameters[i + meta_spec->machine_spec->P] = (double) PI / 2.0;
         }
+    } else {
+        if (meta_spec->opt_spec->parameters == NULL) {
+            fprintf(stderr, "Trying to retain no information\n");
+            exit(EXIT_FAILURE);
+        }
     }
+
+    meta_spec->opt_spec->lower_bounds = mkl_calloc((size_t) num_params, sizeof(double), DEF_ALIGNMENT);
+    meta_spec->opt_spec->upper_bounds = mkl_calloc((size_t) num_params, sizeof(double), DEF_ALIGNMENT);
 
 
     for(int i = 0; i < meta_spec->machine_spec->P; ++i){
@@ -111,6 +119,8 @@ void optimiser_Initialize(qaoa_data_t *meta_spec, bool retain) {
  * @param cost_data Contains information about the cost_function
  * @param opt_spec Contains specification of the classical optimization routine
  * @param run_spec Contains specifcation of the type of simulation to be run
+ * @param retain If set, will use parameter values in the opt_spec.
+ * @warning If retain set, optimizer will expect values to be pre-initialized
  */
 void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimization_spec_t *opt_spec, run_spec_t *run_spec,
           bool retain) {
