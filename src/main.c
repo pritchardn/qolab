@@ -19,6 +19,7 @@ int main(int argc, char *argv[]){
     run_spec.sampling = true;
     run_spec.verbose = false;
     run_spec.restricted = true;
+    run_spec.restart = true;
     run_spec.num_samples = 100;
     run_spec.outfile = stdout;
 
@@ -42,7 +43,16 @@ int main(int argc, char *argv[]){
     generate_graph(cost_data.graph, mach_spec.num_qubits, 0.5);
     print_graph(&cost_data, stdout);
 
-    qaoa(&mach_spec, &cost_data, &opt_spec, &run_spec);
+    qaoa(&mach_spec, &cost_data, &opt_spec, &run_spec, false);
+    mach_spec.P = 2;
+    //Reallocate parameters
+    mkl_realloc(opt_spec.parameters, (run_spec.restricted ? mach_spec.P * 2 + 1 : mach_spec.P) * sizeof(double));
+    if (run_spec.restricted) {
+        move_params_restricted(mach_spec.P, opt_spec.parameters);
+    } else {
+        move_params(mach_spec.P, opt_spec.parameters);
+    }
+    qaoa(&mach_spec, &cost_data, &opt_spec, &run_spec, true);
     mkl_free(cost_data.graph);
     return 0;
 }

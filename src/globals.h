@@ -22,6 +22,10 @@ MKL_INT factorial(int n);
 void mkl_error_parse(int error, FILE *stream);
 void check_alloc(void *pointer);
 
+void move_params(int P, double *parameters);
+
+void move_params_restricted(int P, double *parameters);
+
 /*! Contains run-time statistics */
 typedef struct {
     double startTimes[4];       /**< Buffers to hold timing data (total, uc, ub, optimisation) */
@@ -44,6 +48,7 @@ typedef struct {
     bool sampling;      /**< Are we sampling? */
     bool verbose;       /**< Should we print everything? */
     bool restricted;    /**< Are we running the restricted version of the QAOA? (https://arxiv.org/abs/1804.08227) */
+    bool restart;       /**< If set, the simulation will retain parameter information between calls to the simulation */
     int num_samples;    /**< The number of samples we use */
     FILE *outfile;      /**< The stream we actually write to (can be stdout or a file) */
 } run_spec_t;

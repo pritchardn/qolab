@@ -54,7 +54,8 @@ void parameter_checking(qaoa_data_t *meta_spec) {
 void qaoa_teardown(qaoa_data_t *meta_spec){
     mkl_sparse_destroy(meta_spec->ub);
     mkl_free(meta_spec->uc);
-    mkl_free(meta_spec->opt_spec->parameters);
+    if (!meta_spec->run_spec->restart)
+        mkl_free(meta_spec->opt_spec->parameters);
     mkl_free(meta_spec->opt_spec->lower_bounds);
     mkl_free(meta_spec->opt_spec->upper_bounds);
 }
@@ -63,23 +64,36 @@ void qaoa_teardown(qaoa_data_t *meta_spec){
 /**
  * @brief Initializes the nlopt optimisation data-structures with provided fields
  * @param meta_spec The data-structure containing all fields
+ * @param retain If set, initializer won't allocate or reset parametesr
+ * @warning Assumes paramters are of appropriate size and contain relevant values
  */
-void optimiser_Initialize(qaoa_data_t *meta_spec) {
+void optimiser_Initialize(qaoa_data_t *meta_spec, bool retain) {
     int num_params = 2 * meta_spec->machine_spec->P;
     if (meta_spec->run_spec->restricted) {
         num_params++;
     }
-    meta_spec->opt_spec->parameters = mkl_calloc((size_t) num_params, sizeof(double), DEF_ALIGNMENT);
+    if (!retain) {
+        meta_spec->opt_spec->parameters = mkl_calloc((size_t) num_params, sizeof(double), DEF_ALIGNMENT);
+        for (int i = 0; i < meta_spec->machine_spec->P; ++i) {
+            meta_spec->opt_spec->parameters[i] = (double) PI;
+            meta_spec->opt_spec->parameters[i + meta_spec->machine_spec->P] = (double) PI / 2.0;
+        }
+    } else {
+        if (meta_spec->opt_spec->parameters == NULL) {
+            fprintf(stderr, "Trying to retain no information\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+
     meta_spec->opt_spec->lower_bounds = mkl_calloc((size_t) num_params, sizeof(double), DEF_ALIGNMENT);
     meta_spec->opt_spec->upper_bounds = mkl_calloc((size_t) num_params, sizeof(double), DEF_ALIGNMENT);
+
 
     for(int i = 0; i < meta_spec->machine_spec->P; ++i){
         meta_spec->opt_spec->upper_bounds[i] = 2 * (double) PI;
         meta_spec->opt_spec->lower_bounds[i] = 0.0;
         meta_spec->opt_spec->upper_bounds[i + meta_spec->machine_spec->P] = (double) PI;
         meta_spec->opt_spec->lower_bounds[i + meta_spec->machine_spec->P] = 0.0;
-        meta_spec->opt_spec->parameters[i] = (double) PI;
-        meta_spec->opt_spec->parameters[i + meta_spec->machine_spec->P] = (double) PI / 2.0;
     }
 
     meta_spec->opt_spec->optimiser = nlopt_create(meta_spec->opt_spec->nlopt_method, (unsigned int) num_params);
@@ -105,8 +119,11 @@ void optimiser_Initialize(qaoa_data_t *meta_spec) {
  * @param cost_data Contains information about the cost_function
  * @param opt_spec Contains specification of the classical optimization routine
  * @param run_spec Contains specifcation of the type of simulation to be run
+ * @param retain If set, will use parameter values in the opt_spec.
+ * @warning If retain set, optimizer will expect values to be pre-initialized
  */
-void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimization_spec_t *opt_spec, run_spec_t *run_spec) {
+void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimization_spec_t *opt_spec, run_spec_t *run_spec,
+          bool retain) {
     qaoa_data_t meta_spec;
     qaoa_statistics_t statistics;
     MKL_INT ub_nnz;
@@ -145,7 +162,7 @@ void qaoa(machine_spec_t *mach_spec, cost_data_t *cost_data, optimization_spec_t
     if (meta_spec.run_spec->verbose) {
         printf("UB Created\n");
     }
-    optimiser_Initialize(&meta_spec);
+    optimiser_Initialize(&meta_spec, retain);
     meta_spec.qaoa_statistics->startTimes[3] = dsecnd();
     meta_spec.qaoa_statistics->term_status = nlopt_optimize(meta_spec.opt_spec->optimiser,
                                                             opt_spec->parameters, &meta_spec.qaoa_statistics->result);
