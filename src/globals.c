@@ -78,6 +78,12 @@ void mkl_error_parse(int error_code, FILE *stream) {
     }
 }
 
+/**
+ * @brief Moves optimization paramters to a larger reallocated array for future use
+ * @param P The new decomposition value
+ * @param parameters The parameter array
+ * @warning Assumes that the increase in P is incremental
+ */
 void move_params(int P, double *parameters) {
     for (int i = 2 * P - 2; i >= P; --i) {
         parameters[i] = parameters[i - 1];
@@ -87,6 +93,12 @@ void move_params(int P, double *parameters) {
 
 }
 
+/**
+ * @brief Moves optimization paramters to a larger reallocated array for future use in the restricted case
+ * @param P The new decomposition value
+ * @param parameters The parameter array
+ * @warning Assumes that the increase in P is incremental
+ */
 void move_params_restricted(int P, double *parameters) {
     for (int i = 2 * P - 1; i >= P; --i) {
         parameters[i] = parameters[i - 1];
