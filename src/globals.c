@@ -77,3 +77,20 @@ void mkl_error_parse(int error_code, FILE *stream) {
             break;
     }
 }
+
+void move_params(int P, double *parameters) {
+    for (int i = 2 * P - 2; i >= P; --i) {
+        parameters[i] = parameters[i - 1];
+    }
+    parameters[2 * P - 1] = 0.0;
+    parameters[P - 1] = 0.0;
+
+}
+
+void move_params_restricted(int P, double *parameters) {
+    for (int i = 2 * P - 1; i >= P; --i) {
+        parameters[i] = parameters[i - 1];
+    }
+    parameters[2 * P] = 0.0;
+    parameters[P - 1] = 0.0;
+}

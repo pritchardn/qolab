@@ -22,6 +22,10 @@ MKL_INT factorial(int n);
 void mkl_error_parse(int error, FILE *stream);
 void check_alloc(void *pointer);
 
+void move_params(int P, double *parameters);
+
+void move_params_restricted(int P, double *parameters);
+
 /*! Contains run-time statistics */
 typedef struct {
     double startTimes[4];       /**< Buffers to hold timing data (total, uc, ub, optimisation) */
