@@ -140,6 +140,7 @@ double sample(double *probabilities, qaoa_data_t *meta_spec) {
     double *samples = NULL;
     MKL_INT nnz;
     MKL_INT best_sample;
+    MKL_INT curr_best;
     MKL_INT space_dimension = meta_spec->machine_spec->space_dimension;
     MKL_INT *vals = NULL;
     MKL_LONG sample_sum;
@@ -171,7 +172,15 @@ double sample(double *probabilities, qaoa_data_t *meta_spec) {
 
     //Extract useful data
     expectation = (double) sample_sum / (double) meta_spec->run_spec->num_samples; // Estimating expectation value
-    best_sample = (MKL_INT) samples[cblas_idamax(meta_spec->run_spec->num_samples, samples, 1)];
+
+    curr_best = (MKL_INT) samples[cblas_idamax(meta_spec->run_spec->num_samples, samples, 1)];
+
+    while (curr_best > meta_spec->qaoa_statistics->max_value) {
+        samples[cblas_idamax(meta_spec->run_spec->num_samples, samples, 1)] = -1;
+        curr_best = (MKL_INT) samples[cblas_idamax(meta_spec->run_spec->num_samples, samples, 1)];
+    }
+
+    best_sample = curr_best;
 
     if (best_sample > meta_spec->qaoa_statistics->best_sample) {
         meta_spec->qaoa_statistics->best_sample = best_sample;
